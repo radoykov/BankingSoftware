@@ -1,46 +1,7 @@
 #include <stdio.h>
-#define NAME_MAX_LEN 50
-#define IBAN_MAX_LEN 34
-
-typedef enum Operation
-{
-    WITHDRAW
-} Operation;
-
-typedef struct User
-{
-    int id;
-    char username[NAME_MAX_LEN];
-    char *hashedPassword; // type will be changed there will be includet sha256 len
-
-} User;
-
-int loginUser(char* username, char*password);
-int registerUser(char* username, char*password);
-
-typedef struct Account
-{
-    char iban[IBAN_MAX_LEN];
-    double balance;
-    int userId;
-
-} Account;
-
-int withdraw(double amount);
-int deposit(double amount);
-
-
-typedef struct Transaction
-{
-    Operation operation; 
-    double amount;
-    char *accountFrom;
-    char *accountTo;
-
-} Transaction;
-
-int transfer(char* iban, double amount);
-int executeAllTransactions();
+#include "transactions.h"
+#include "users.h"
+#include "accounts.h"
 
 int main()
 {
