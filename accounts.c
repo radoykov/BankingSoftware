@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "accounts.h"
 
 int generateIDNumber(){
@@ -33,6 +36,7 @@ BankAccount *createBankAccount(){
  newAccount->balance = 0.0;
  newAccount->userId = generateIDNumber();
  generateIban(newAccount->iban);
+ return newAccount;
 }
 
 int withdraw(BankAccount account,double amount){

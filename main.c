@@ -3,7 +3,7 @@
 //#include <time.h>
 #include "users.h"
 // #include "transactions.h"
-//#include "accounts.h"
+#include "accounts.h"
 
 
 void registration(UsersTable *users)
@@ -55,6 +55,12 @@ int main()
 
         if (choise == 1)
         {
+            //FOR TESTING ONLY:
+            BankAccount * ba = createBankAccount();
+            printf("\nIban: %s", ba->iban);
+            printf("\nUserId: %d", ba->userId);
+            printf("\nbalance: %f", ba->balance);
+
         }
         else if (choise == 2)
         {
