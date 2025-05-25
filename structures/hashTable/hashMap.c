@@ -3,7 +3,7 @@
 #include <string.h>
 #include "hashMap.h"
 
-Node *initNode(char *key, int val)
+Node *initNode(void *key, void *val)
 {
     Node *newNode = (Node *)malloc(sizeof(Node));
     CHECK(newNode);
@@ -26,37 +26,47 @@ HashMap *initHashMap()
 
 // abv
 // a + b + v
-int hash(char *key)
-{
-    int value = 0;
-    for (int i = 0; key[i] != '\0'; i++)
-    {
-        value += key[i];
-    }
+// int hash(char *key)
+// {
+//     int value = 0;
+//     for (int i = 0; key[i] != '\0'; i++)
+//     {
+//         value += key[i];
+//     }
 
-    return value;
+//     return value;
+// }
+
+
+//djb2, by Daniel J. Bernstein
+unsigned long hash(const char* key) {
+    unsigned long hash = 5381;
+    int c;
+    while ((c = *key++))
+        hash = ((hash << 5) + hash) + c;
+    return hash;
 }
 
-void set(HashMap *hashMap, char *key, int val)
+void setByStringKey(HashMap *hashMap, char *key, void *val)
 {
 
     int index = hash(key) % HASH_MAP_SIZE;
 
     if (hashMap->array[index])
     {
-        Node *curr = hashMap->array[index];
+        Node *current = hashMap->array[index];
 
-        while (curr->next)
+        while (current->next)
         {
-            if (!strcmp(key, curr->key))
+            if (strcmp((char *)current->key, key) == 0)
             {
-                curr->val = val;
+                current->val = val;
                 return;
             }
-            curr = curr->next;
+            current = current->next;
         }
 
-        curr->next = initNode(key, val);
+        current->next = initNode(key, val);
     }
     else
     {
@@ -64,25 +74,73 @@ void set(HashMap *hashMap, char *key, int val)
     }
 }
 
-int get(HashMap *hashMap, char *key)
+void setByIntKey(HashMap *hashMap, int key, void *val)
+{
+
+    int index = key % HASH_MAP_SIZE;
+
+    if (hashMap->array[index])
+    {
+        Node *current = hashMap->array[index];
+
+        while (current->next)
+        {
+            if (*(int *)current->key == key)
+            {
+                current->val = val;
+                return;
+            }
+            current = current->next;
+        }
+
+        current->next = initNode(&key, val);
+    }
+    else
+    {
+        hashMap->array[index] = initNode(&key, val);
+    }
+}
+
+void *getByStringKey(HashMap *hashMap, char *key)
 {
     int index = hash(key) % HASH_MAP_SIZE;
 
     if (hashMap->array[index])
     {
-        Node *curr = hashMap->array[index];
+        Node *current = hashMap->array[index];
 
-        while (curr)
+        while (current)
         {
-            if (!strcmp(key, curr->key))
+            if (strcmp((char *)current->key, key) == 0)
             {
-                return curr->val;
+                return current->val;
             }
-            curr = curr->next;
+            current = current->next;
         }
     }
 
-    return -1;
+    return NULL;
+}
+
+void *getByIntKey(HashMap *hashMap, int key)
+{
+    int index = key % HASH_MAP_SIZE;
+
+    if (hashMap->array[index])
+    {
+        Node *current = hashMap->array[index];
+
+        while (current)
+        {
+            if (*(int *)current->key == key)
+            {
+                return current->val;
+            }
+            current = current->next;
+        }
+    }
+
+    return NULL;
 }
 
 void printHashMap(HashMap *hashMap)
