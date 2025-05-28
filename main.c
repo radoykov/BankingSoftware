@@ -1,24 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include <time.h>
+// #include <time.h>
 #include "users.h"
 // #include "transactions.h"
 #include "accounts.h"
-#include "sha256.h"
-
 
 void registration(UsersTable *users)
 {
-    char username[USERNAME_MAX_LEN * 2];
-    char password[PASSWORD_MAX_LEN * 2];
+    char username[USERNAME_SIZE];
+    char password[PASSWORD_SIZE];
 
     printf("\nEnter your new username: ");
     scanf("%s", username);
     if (validateUsername(username) == 0)
-    {
         return;
-    }
 
     User *user = findUserByUsername(users, username);
     if (user)
@@ -30,9 +26,7 @@ void registration(UsersTable *users)
     printf("Enter your password: ");
     scanf("%s", password);
     if (validatePassword(password) == 0)
-    {
         return;
-    }
 
     User *newUser = createUser(username, password);
     registerUser(users, newUser);
@@ -40,39 +34,46 @@ void registration(UsersTable *users)
     // Here we may want to login the user directly.
 }
 
-void login(UsersTable *users){
-    char username[USERNAME_MAX_LEN * 2];
-    char password[PASSWORD_MAX_LEN * 2];
+int login(UsersTable *users)
+{
+    char username[USERNAME_SIZE];
+    char password[PASSWORD_SIZE];
     char hashedPass[HASH_HEXADECIMAL_SIZE];
 
     printf("\nEnter your username:");
-    scanf("%s",username);
+    scanf("%s", username);
+    if (validateUsername(username) == 0)
+        return 0;
 
-    User *user = findUserByUsername(users,username);
-    if(!user){
+    User *user = findUserByUsername(users, username);
+    if (!user)
+    {
         printf("Error: No such user exists.");
-        return NULL;
+        return 0;
     }
 
     printf("\nEnter your password: ");
-    scanf("%s",password);
+    scanf("%s", password);
+    if (validatePassword(password) == 0)
+        return 0;
 
-    hashPassword(password,hashedPass);
+    hashPassword(password, hashedPass);
 
-    if(strcmp(user->hashedPassword,hashedPass) == 0){
+    if (strcmp(user->hashedPassword, hashedPass) == 0)
+    {
         printf("Login Successful.");
-        return user;
+        return user->id;
     }
-    else{
+    else
+    {
         printf("Error: Incorrect password.");
-        return NULL;
+        return 0;
     }
-
 }
-
 
 int main()
 {
+    int session = -1;
     UsersTable *users = initUsers();
 
     while (1)
@@ -87,12 +88,11 @@ int main()
 
         if (choise == 1)
         {
-            //FOR TESTING ONLY:
-            BankAccount * ba = createBankAccount();
-            printf("\nIban: %s", ba->iban);
-            printf("\nUserId: %d", ba->userId);
-            printf("\nbalance: %f", ba->balance);
-
+            int userId = login(users);
+            if (userId)
+            {
+                session = userId;
+            }
         }
         else if (choise == 2)
         {
@@ -109,8 +109,7 @@ int main()
         {
             printf("\nYou have selected wrong choise please try again.");
         }
-    }
 
+    }
     return 0;
 }
-

@@ -2,19 +2,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include "users.h"
-#include "sha256.h"
 
-void hashPassword(const char *password,char *output_hexadecimal){
-   uint8_t hash[32];
-   SHA256_CTX ctx;
+void hashPassword(const char *password, char *output_hexadecimal)
+{
+    uint8_t hash[32];
+    SHA256_CTX ctx;
 
-   sha256_init(&ctx);
-   sha256_update(&ctx,(const uint8_t*)password,strlen(password));
-   sha256_final(&ctx,hash);
+    sha256_init(&ctx);
+    sha256_update(&ctx, (const uint8_t *)password, strlen(password));
+    sha256_final(&ctx, hash);
 
-   for(int i = 0; i < 32; ++i){
-    sprintf(output_hexadecimal + (i * 2), "%02x", hash[i]);
-}
+    for (int i = 0; i < 32; ++i)
+    {
+        sprintf(output_hexadecimal + (i * 2), "%02x", hash[i]);
+    }
 }
 
 UsersTable *initUsers()
@@ -42,9 +43,8 @@ User *createUser(char *username, char *password)
     CHECK(newUser);
     newUser->id = 0;
     strcpy(newUser->username, username);
-    newUser->hashedPassword = (char*)malloc(HASH_HEXADECIMAL_SIZE);// TODO: Use hash function here.
-    CHECK(newUser->hashedPassword);
-    hashPassword(password,newUser->hashedPassword);
+    hashPassword(password, newUser->hashedPassword);
+
     return newUser;
 }
 
@@ -83,4 +83,22 @@ int validatePassword(char *password)
         return 0;
     }
     return 1;
+}
+
+void release(UsersTable *ut)
+{
+    for (int i = 0; i < HASH_MAP_SIZE; i++)
+    {
+        Node *curr = ut->byUsername->array[i];
+        while (curr)
+        {
+            Node *temp = curr;
+            curr = curr->next;
+            //user memory
+            free(temp->val);
+            free(temp->key);
+        }
+    }
+    freeHashMap(ut->byUsername);
+    freeHashMap(ut->byId);
 }

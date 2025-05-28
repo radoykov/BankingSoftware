@@ -1,5 +1,5 @@
 #ifndef HASHMAP_H
-#define HASMAP_H
+#define HASHMAP_H
 
 #define HASH_MAP_SIZE 11 //Use prime number for better distribution.
 
