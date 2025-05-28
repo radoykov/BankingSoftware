@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 //#include <time.h>
 #include "users.h"
 // #include "transactions.h"
 #include "accounts.h"
+#include "sha256.h"
 
 
 void registration(UsersTable *users)
@@ -11,7 +13,7 @@ void registration(UsersTable *users)
     char username[USERNAME_MAX_LEN * 2];
     char password[PASSWORD_MAX_LEN * 2];
 
-    printf("\nEnter your username: ");
+    printf("\nEnter your new username: ");
     scanf("%s", username);
     if (validateUsername(username) == 0)
     {
@@ -36,6 +38,36 @@ void registration(UsersTable *users)
     registerUser(users, newUser);
     printf("User successfuly registered!\n");
     // Here we may want to login the user directly.
+}
+
+void login(UsersTable *users){
+    char username[USERNAME_MAX_LEN * 2];
+    char password[PASSWORD_MAX_LEN * 2];
+    char hashedPass[HASH_HEXADECIMAL_SIZE];
+
+    printf("\nEnter your username:");
+    scanf("%s",username);
+
+    User *user = findUserByUsername(users,username);
+    if(!user){
+        printf("Error: No such user exists.");
+        return NULL;
+    }
+
+    printf("\nEnter your password: ");
+    scanf("%s",password);
+
+    hashPassword(password,hashedPass);
+
+    if(strcmp(user->hashedPassword,hashedPass) == 0){
+        printf("Login Successful.");
+        return user;
+    }
+    else{
+        printf("Error: Incorrect password.");
+        return NULL;
+    }
+
 }
 
 

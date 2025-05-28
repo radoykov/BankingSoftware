@@ -21,5 +21,5 @@ void sha256_init(SHA256_CTX *ctx);
 void sha256_update(SHA256_CTX *ctx, const BYTE data[], size_t len);
 void sha256_final(SHA256_CTX *ctx, BYTE hash[]);
 
-
+void hashPassword(const char *password,char *output_hexadecimal);
 #endif
