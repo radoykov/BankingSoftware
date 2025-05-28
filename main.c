@@ -34,7 +34,7 @@ void registration(UsersTable *users)
     // Here we may want to login the user directly.
 }
 
-int login(UsersTable *users)
+User * login(UsersTable *users)
 {
     char username[USERNAME_SIZE];
     char password[PASSWORD_SIZE];
@@ -43,37 +43,78 @@ int login(UsersTable *users)
     printf("\nEnter your username:");
     scanf("%s", username);
     if (validateUsername(username) == 0)
-        return 0;
+        return NULL;
 
     User *user = findUserByUsername(users, username);
     if (!user)
     {
         printf("Error: No such user exists.");
-        return 0;
+        return NULL;
     }
 
     printf("\nEnter your password: ");
     scanf("%s", password);
     if (validatePassword(password) == 0)
-        return 0;
+        return NULL;
 
     hashPassword(password, hashedPass);
 
     if (strcmp(user->hashedPassword, hashedPass) == 0)
     {
         printf("Login Successful.");
-        return user->id;
+        return user;
     }
     else
     {
         printf("Error: Incorrect password.");
-        return 0;
+        return NULL;
+    }
+}
+
+void showMenu(Session * session)
+{
+    printf("\nWelcome %s", session->username);
+
+    printf("\nChoose from this options:");
+    printf("\n1.Withdraw");
+    printf("\n2.Deposit");
+    printf("\n3.Transaction");
+    printf("\n4.Prosess all transacions");
+    printf("\n5.Logout");
+    int choise = 0;
+    printf("\nYour choise is: ");
+    scanf("%d", &choise);
+    while (1)
+    {
+        switch (choise)
+        {
+        case 1:
+            /* code */
+            break;
+        case 2:
+            /* code */
+            break;
+        case 3:
+            /* code */
+            break;
+        case 4:
+            /* code */
+            break;
+        case 5:
+            printf("You succeesfully logged out.");
+            session = NULL;
+            return;
+
+        default:
+            printf("\nYou have selected wrong choise please try again.");
+            break;
+        }
     }
 }
 
 int main()
 {
-    int session = -1;
+    Session * session = NULL;
     UsersTable *users = initUsers();
 
     while (1)
@@ -88,10 +129,11 @@ int main()
 
         if (choise == 1)
         {
-            int userId = login(users);
-            if (userId)
+            User * loggedUser =  login(users);
+            if (loggedUser)
             {
-                session = userId;
+                session = initSession(loggedUser);
+                showMenu(session);
             }
         }
         else if (choise == 2)
@@ -109,7 +151,6 @@ int main()
         {
             printf("\nYou have selected wrong choise please try again.");
         }
-
     }
     return 0;
 }

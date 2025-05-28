@@ -94,11 +94,26 @@ void release(UsersTable *ut)
         {
             Node *temp = curr;
             curr = curr->next;
-            //user memory
+            // user memory
             free(temp->val);
             free(temp->key);
         }
     }
     freeHashMap(ut->byUsername);
     freeHashMap(ut->byId);
+}
+
+Session *initSession(User *user)
+{
+    Session *s = (Session *)malloc(sizeof(Session));
+    CHECK(s);
+    s->id = user->id;
+    strcpy(s->username, user->username);
+
+    return s;
+}
+
+void deleleSession(Session *session)
+{
+    free(session);
 }
