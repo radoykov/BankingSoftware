@@ -1,3 +1,5 @@
+#include "structures/hashTable/hashMap.h"
+
 #ifndef ACCOUNTS_H
 #define ACCOUNTS_H
 #define IBAN_MAX_LEN 35
@@ -12,8 +14,21 @@ typedef struct BankAccount
 
 } BankAccount;
 
+typedef struct BankAccountsMap{
+
+    HashMap *byIban;
+    HashMap *byUserID;
+
+}BankAccountsMap;
+
 int withdraw(BankAccount account,double amount);
 int deposit(BankAccount account,double amount);  //Change here
 
 BankAccount *createBankAccount(); //Change Here
+
+BankAccountsMap *initBankAccountsTable();
+void registerBankAccount(BankAccountsMap *map,BankAccount *account);
+BankAccount *findByIban(BankAccountsMap *map, const char *iban);
+BankAccount *findByUserID(BankAccountsMap *map,int userID);
+
 #endif

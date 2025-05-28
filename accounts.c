@@ -39,6 +39,30 @@ BankAccount *createBankAccount(){
  return newAccount;
 }
 
+BankAccountsMap *initBankAccountsTable(){
+    BankAccountsMap *newMap = (BankAccountsMap*)malloc(sizeof(BankAccountsMap));
+    CHECK(newMap);
+    newMap->byIban = initHashMap();
+    newMap->byUserID = initHashMap();
+    return newMap;
+}
+
+void registerBankAccount(BankAccountsMap *map,BankAccount *account){
+    setByStringKey(map->byIban,account->iban,account);
+    setByIntKey(map->byUserID,account->userId,account);
+}
+
+BankAccount *findByIban(BankAccountsMap *map, const char *iban){
+    return (BankAccount*)getByStringKey(map->byIban,iban);
+}
+
+BankAccount *findByUserID(BankAccountsMap *map,int userID){
+    return (BankAccount*)getByIntKey(map->byUserID,userID);
+}
+
+
+
+
 int withdraw(BankAccount account,double amount){
  if(account.balance == 0 || (account.balance - amount) < 0){
     printf("Error: Withdrawal unsuccessful due to insufficient funds in account.");
