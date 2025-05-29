@@ -27,20 +27,25 @@ typedef struct UsersTable
 {
     HashMap *byId;
     HashMap *byUsername;
+
 } UsersTable;
 
-// int loginUser(char *username, char *password);
-void hashPassword(const char *password, char *output_hexadecimal);
+User *loginUser(UsersTable *users);
+User *registerUser(UsersTable *users);
 UsersTable *initUsers();
 User *createUser(char *username, char *password);
-void registerUser(UsersTable *users, User *user);
+void addUser(UsersTable *users, User *user);
 User *findUserByUsername(UsersTable *users, char *username);
 User *findUserById(UsersTable *users, int id);
+
+void hashPassword(const char *password, char *output_hexadecimal);
 int validateUsername(char *username);
 int validatePassword(char *password);
+
 void release(UsersTable *ut);
 
-Session * initSession(User * user);
-void deleleSession(Session * session);
+//Session menagement
+Session *initSession(User *user);
+void deleleSession(Session *session);
 
 #endif

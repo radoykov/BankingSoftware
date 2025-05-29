@@ -48,7 +48,7 @@ User *createUser(char *username, char *password)
     return newUser;
 }
 
-void registerUser(UsersTable *users, User *user)
+void addUser(UsersTable *users, User *user)
 {
     user->id = generateUniqueId(users->byId);
     setByIntKey(users->byId, user->id, user);
@@ -63,6 +63,71 @@ User *findUserByUsername(UsersTable *users, char *username)
 User *findUserById(UsersTable *users, int id)
 {
     return (User *)getByIntKey(users->byId, id);
+}
+
+User *loginUser(UsersTable *users)
+{
+    char username[USERNAME_SIZE];
+    char password[PASSWORD_SIZE];
+    char hashedPass[HASH_HEXADECIMAL_SIZE];
+
+    printf("\nEnter your username:");
+    scanf("%s", username);
+    if (validateUsername(username) == 0)
+        return NULL;
+
+    User *user = findUserByUsername(users, username);
+    if (!user)
+    {
+        printf("Error: No such user exists.");
+        return NULL;
+    }
+
+    printf("\nEnter your password: ");
+    scanf("%s", password);
+    if (validatePassword(password) == 0)
+        return NULL;
+
+    hashPassword(password, hashedPass);
+
+    if (strcmp(user->hashedPassword, hashedPass) == 0)
+    {
+        printf("Login Successful.");
+        return user;
+    }
+    else
+    {
+        printf("Error: Incorrect password.");
+        return NULL;
+    }
+}
+
+User *registerUser(UsersTable *users)
+{
+    char username[USERNAME_SIZE];
+    char password[PASSWORD_SIZE];
+
+    printf("\nEnter your new username: ");
+    scanf("%s", username);
+    if (validateUsername(username) == 0)
+        return NULL;
+
+    User *user = findUserByUsername(users, username);
+    if (user)
+    {
+        printf("Error: Provided username already exists!\n");
+        return NULL;
+    }
+
+    printf("Enter your password: ");
+    scanf("%s", password);
+    if (validatePassword(password) == 0)
+        return NULL;
+
+    User *newUser = createUser(username, password);
+    addUser(users, newUser);
+    printf("User successfuly registered!\n");
+    return newUser;
 }
 
 int validateUsername(char *username)

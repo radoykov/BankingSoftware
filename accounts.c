@@ -25,16 +25,16 @@ void generateIban(char newIban[IBAN_MAX_LEN]){
             newIban[i] = '0' + rand() % 10;
         }
         else{
-            newIban = 'A' + rand() % 26;
+            newIban[i]= 'A' + rand() % 26;
         }
     }
     newIban[IBAN_MAX_LEN - 1] = '\0';
 }
 
-BankAccount *createBankAccount(){
+BankAccount *createBankAccount(int userId){
  BankAccount *newAccount = (BankAccount*)malloc(sizeof(BankAccount));
  newAccount->balance = 0.0;
- newAccount->userId = generateIDNumber();
+ newAccount->userId = userId;
  generateIban(newAccount->iban);
  return newAccount;
 }
@@ -47,7 +47,7 @@ BankAccountsMap *initBankAccountsTable(){
     return newMap;
 }
 
-void registerBankAccount(BankAccountsMap *map,BankAccount *account){
+void addBankAccount(BankAccountsMap *map,BankAccount *account){
     setByStringKey(map->byIban,account->iban,account);
     setByIntKey(map->byUserID,account->userId,account);
 }

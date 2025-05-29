@@ -24,10 +24,10 @@ typedef struct BankAccountsMap{
 int withdraw(BankAccount account,double amount);
 int deposit(BankAccount account,double amount);  //Change here
 
-BankAccount *createBankAccount(); //Change Here
+BankAccount *createBankAccount(int userId); //Change Here
 
 BankAccountsMap *initBankAccountsTable();
-void registerBankAccount(BankAccountsMap *map,BankAccount *account);
+void addBankAccount(BankAccountsMap *map,BankAccount *account);
 BankAccount *findByIban(BankAccountsMap *map, const char *iban);
 BankAccount *findByUserID(BankAccountsMap *map,int userID);
 

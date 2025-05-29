@@ -6,72 +6,7 @@
 // #include "transactions.h"
 #include "accounts.h"
 
-void registration(UsersTable *users)
-{
-    char username[USERNAME_SIZE];
-    char password[PASSWORD_SIZE];
-
-    printf("\nEnter your new username: ");
-    scanf("%s", username);
-    if (validateUsername(username) == 0)
-        return;
-
-    User *user = findUserByUsername(users, username);
-    if (user)
-    {
-        printf("Error: Provided username already exists!\n");
-        return;
-    }
-
-    printf("Enter your password: ");
-    scanf("%s", password);
-    if (validatePassword(password) == 0)
-        return;
-
-    User *newUser = createUser(username, password);
-    registerUser(users, newUser);
-    printf("User successfuly registered!\n");
-    // Here we may want to login the user directly.
-}
-
-User * login(UsersTable *users)
-{
-    char username[USERNAME_SIZE];
-    char password[PASSWORD_SIZE];
-    char hashedPass[HASH_HEXADECIMAL_SIZE];
-
-    printf("\nEnter your username:");
-    scanf("%s", username);
-    if (validateUsername(username) == 0)
-        return NULL;
-
-    User *user = findUserByUsername(users, username);
-    if (!user)
-    {
-        printf("Error: No such user exists.");
-        return NULL;
-    }
-
-    printf("\nEnter your password: ");
-    scanf("%s", password);
-    if (validatePassword(password) == 0)
-        return NULL;
-
-    hashPassword(password, hashedPass);
-
-    if (strcmp(user->hashedPassword, hashedPass) == 0)
-    {
-        printf("Login Successful.");
-        return user;
-    }
-    else
-    {
-        printf("Error: Incorrect password.");
-        return NULL;
-    }
-}
-
-void showMenu(Session * session)
+void showMenu(Session *session)
 {
     printf("\nWelcome %s", session->username);
 
@@ -114,8 +49,9 @@ void showMenu(Session * session)
 
 int main()
 {
-    Session * session = NULL;
+    Session *session = NULL;
     UsersTable *users = initUsers();
+    BankAccountsMap *accounts = initBankAccountsTable();
 
     while (1)
     {
@@ -129,7 +65,7 @@ int main()
 
         if (choise == 1)
         {
-            User * loggedUser =  login(users);
+            User *loggedUser = loginUser(users);
             if (loggedUser)
             {
                 session = initSession(loggedUser);
@@ -139,7 +75,15 @@ int main()
         else if (choise == 2)
         {
             printf("\n2.Registration");
-            registration(users);
+            User *regUser = registerUser(users);
+            BankAccount *newAccount = createBankAccount(regUser->id);
+            addBankAccount(accounts, newAccount);
+            // Here we may want to login the user directly.
+            // printf("\nusr: %d", regUser->id);
+            // printf("\nusr: %s", regUser->hashedPassword);
+            // printf("\nusr: %s", regUser->username);
+            // printf("\nacc: %s", newAccount->iban);
+            // printf("\nacc: %d", newAccount->userId);
         }
         else if (choise == 3)
         {
