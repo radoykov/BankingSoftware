@@ -37,6 +37,15 @@ static int generateUniqueId(HashMap *map)
     return id;
 }
 
+User *initUser()
+{
+    User *newUser = (User *)malloc(sizeof(User));
+    CHECK(newUser);
+
+    return newUser;
+}
+
+
 User *createUser(char *username, char *password)
 {
     User *newUser = (User *)malloc(sizeof(User));

@@ -5,6 +5,7 @@
 #include "users.h"
 // #include "transactions.h"
 #include "accounts.h"
+#include "database.h"
 
 void showMenu(Session *session)
 {
@@ -51,6 +52,7 @@ int main()
 {
     Session *session = NULL;
     UsersTable *users = initUsers();
+    readAllUsersFromFile(users);
     BankAccountsTable *accounts = initBankAccounts();
 
     while (1)
@@ -78,6 +80,7 @@ int main()
             User *regUser = registerUser(users);
             if (regUser)
             {
+                saveUserInFile(regUser);
                 BankAccount *newAccount = createBankAccount(regUser->id);
                 addBankAccount(accounts, newAccount);
                 // Here we may want to login the user directly.

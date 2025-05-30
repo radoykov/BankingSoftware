@@ -34,6 +34,7 @@ typedef struct UsersTable
 
 User *loginUser(UsersTable *users);
 User *registerUser(UsersTable *users);
+User *initUser();
 UsersTable *initUsers();
 User *createUser(char *username, char *password);
 void addUser(UsersTable *users, User *user);
