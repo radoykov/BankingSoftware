@@ -132,9 +132,9 @@ User *registerUser(UsersTable *users)
 
 int validateUsername(char *username)
 {
-    if (strlen(username) > USERNAME_MAX_LEN)
+    if (strlen(username) > USERNAME_MAX_LEN || strlen(username) < USERNAME_MIN_LEN)
     {
-        printf("Error: Username must be less than %d symbols\n", USERNAME_MAX_LEN);
+        printf("Error: Username length must be between %d and %d \n", USERNAME_MIN_LEN, USERNAME_MAX_LEN);
         return 0;
     }
     return 1;
@@ -142,11 +142,11 @@ int validateUsername(char *username)
 
 int validatePassword(char *password)
 {
-    if (strlen(password) > PASSWORD_MAX_LEN)
+    if (strlen(password) > PASSWORD_MAX_LEN || strlen(password) < PASSWORD_MIN_LEN)
     {
-        printf("Error: Username must be less than %d symbols\n", PASSWORD_MAX_LEN);
+        printf("Error: Password length must be between %d and %d \n", PASSWORD_MIN_LEN, PASSWORD_MAX_LEN);
         return 0;
-    }
+    } 
     return 1;
 }
 

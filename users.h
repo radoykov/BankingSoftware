@@ -7,6 +7,8 @@
 #define USERNAME_SIZE 100
 #define PASSWORD_MAX_LEN 50
 #define PASSWORD_SIZE 100
+#define PASSWORD_MIN_LEN 3
+#define USERNAME_MIN_LEN 3
 
 typedef struct Session
 {

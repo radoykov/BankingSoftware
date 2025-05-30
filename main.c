@@ -76,14 +76,12 @@ int main()
         {
             printf("\n2.Registration");
             User *regUser = registerUser(users);
-            BankAccount *newAccount = createBankAccount(regUser->id);
-            addBankAccount(accounts, newAccount);
-            // Here we may want to login the user directly.
-            // printf("\nusr: %d", regUser->id);
-            // printf("\nusr: %s", regUser->hashedPassword);
-            // printf("\nusr: %s", regUser->username);
-            // printf("\nacc: %s", newAccount->iban);
-            // printf("\nacc: %d", newAccount->userId);
+            if (regUser)
+            {
+                BankAccount *newAccount = createBankAccount(regUser->id);
+                addBankAccount(accounts, newAccount);
+                // Here we may want to login the user directly.
+            }
         }
         else if (choise == 3)
         {

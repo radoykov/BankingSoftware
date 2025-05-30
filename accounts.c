@@ -23,7 +23,7 @@
 
 static void generateIban(char newIban[IBAN_MAX_LEN])
 {
-    for (int i; i < IBAN_MAX_LEN - 1; i++)
+    for (int i = 0; i < IBAN_MAX_LEN - 1; i++)
     {
         int type = rand() % 2; // digit or letter
         if (type == 0)
