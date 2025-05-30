@@ -51,7 +51,7 @@ int main()
 {
     Session *session = NULL;
     UsersTable *users = initUsers();
-    BankAccountsMap *accounts = initBankAccountsTable();
+    BankAccountsTable *accounts = initBankAccounts();
 
     while (1)
     {
@@ -88,6 +88,9 @@ int main()
         else if (choise == 3)
         {
             // write here if needed
+            releaseUsers(users);
+            releaseBankAccounts(accounts);
+            deleleSession(session);
             printf("\nThe program have finished.");
             return 0;
         }

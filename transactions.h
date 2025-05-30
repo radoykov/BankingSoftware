@@ -1,7 +1,7 @@
 #ifndef TRANSACTIONS_H
 #define TRANSACTIONS_H
-//plan to use queue to keep all transactions
-
+// plan to use queue to keep all transactions
+#define IBAN_MAX_LEN 35
 typedef enum Operation
 {
     WITHDRAW
@@ -11,8 +11,8 @@ typedef struct Transaction
 {
     Operation operation;
     double amount;
-    char *accountFrom;
-    char *accountTo;
+    char accountFrom[IBAN_MAX_LEN];
+    char accountTo[IBAN_MAX_LEN];
 
 } Transaction;
 

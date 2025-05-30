@@ -4,7 +4,6 @@
 #include "structures/hashTable/hashMap.h"
 #define IBAN_MAX_LEN 35
 #define ID_LEN 12
-// Plan is to use 2 hashMaps keeping one the same list of BankAccounts. First map with key = iban, second with key = userID
 
 typedef struct BankAccount
 {
@@ -14,21 +13,24 @@ typedef struct BankAccount
 
 } BankAccount;
 
-typedef struct BankAccountsMap{
-
+typedef struct BankAccountsTable
+{
     HashMap *byIban;
     HashMap *byUserID;
 
-}BankAccountsMap;
+} BankAccountsTable;
 
-int withdraw(BankAccount account,double amount);
-int deposit(BankAccount account,double amount);  //Change here
+int withdraw(BankAccount account, double amount);
+int deposit(BankAccount account, double amount); 
 
-BankAccount *createBankAccount(int userId); //Change Here
+BankAccount *createBankAccount(int userId); 
 
-BankAccountsMap *initBankAccountsTable();
-void addBankAccount(BankAccountsMap *map,BankAccount *account);
-BankAccount *findByIban(BankAccountsMap *map, const char *iban);
-BankAccount *findByUserID(BankAccountsMap *map,int userID);
+BankAccountsTable *initBankAccounts();
+void addBankAccount(BankAccountsTable *map, BankAccount *account);
+BankAccount *findByIban(BankAccountsTable *map, char *iban);
+BankAccount *findByUserID(BankAccountsTable *map, int userID);
+void releaseBankAccounts(BankAccountsTable * bat);
+
+static void generateIban(char newIban[IBAN_MAX_LEN]);
 
 #endif

@@ -38,13 +38,14 @@ void addUser(UsersTable *users, User *user);
 User *findUserByUsername(UsersTable *users, char *username);
 User *findUserById(UsersTable *users, int id);
 
-void hashPassword(const char *password, char *output_hexadecimal);
+static void hashPassword(const char *password, char *output_hexadecimal);
+static int generateUniqueId(HashMap *map);
 int validateUsername(char *username);
 int validatePassword(char *password);
 
-void release(UsersTable *ut);
+void releaseUsers(UsersTable *ut);
 
-//Session menagement
+// Session menagement
 Session *initSession(User *user);
 void deleleSession(Session *session);
 

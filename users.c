@@ -3,7 +3,7 @@
 #include <string.h>
 #include "users.h"
 
-void hashPassword(const char *password, char *output_hexadecimal)
+static void hashPassword(const char *password, char *output_hexadecimal)
 {
     uint8_t hash[32];
     SHA256_CTX ctx;
@@ -27,7 +27,7 @@ UsersTable *initUsers()
     return users;
 }
 
-int generateUniqueId(HashMap *map)
+static int generateUniqueId(HashMap *map)
 {
     int id;
     do
@@ -150,7 +150,7 @@ int validatePassword(char *password)
     return 1;
 }
 
-void release(UsersTable *ut)
+void releaseUsers(UsersTable *ut)
 {
     for (int i = 0; i < HASH_MAP_SIZE; i++)
     {
@@ -161,7 +161,6 @@ void release(UsersTable *ut)
             curr = curr->next;
             // user memory
             free(temp->val);
-            free(temp->key);
         }
     }
     freeHashMap(ut->byUsername);
