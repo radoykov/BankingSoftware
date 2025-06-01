@@ -12,7 +12,7 @@
 
 typedef struct Session
 {
-    int id;
+    int userId;
     char username[USERNAME_MAX_LEN];
 
 } Session;

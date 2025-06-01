@@ -180,9 +180,9 @@ Session *initSession(User *user)
 {
     Session *s = (Session *)malloc(sizeof(Session));
     CHECK(s);
-    s->id = user->id;
+    s->userId = user->id;
     strcpy(s->username, user->username);
-
+    
     return s;
 }
 

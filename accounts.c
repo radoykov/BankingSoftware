@@ -64,19 +64,19 @@ void addBankAccount(BankAccountsTable *map, BankAccount *account)
     setByIntKey(map->byUserID, account->userId, account);
 }
 
-BankAccount *findByIban(BankAccountsTable *map, char *iban)
+BankAccount *findAccountByIban(BankAccountsTable *map, char *iban)
 {
     return (BankAccount *)getByStringKey(map->byIban, iban);
 }
 
-BankAccount *findByUserID(BankAccountsTable *map, int userID)
+BankAccount *findAccountByUserID(BankAccountsTable *map, int userID)
 {
     return (BankAccount *)getByIntKey(map->byUserID, userID);
 }
 
-int withdraw(BankAccount account, double amount)
+int withdraw(BankAccount *account, double amount)
 {
-    if (account.balance == 0 || (account.balance - amount) < 0)
+    if (account->balance == 0 || (account->balance - amount) < 0)
     {
         printf("Error: Withdrawal unsuccessful due to insufficient funds in account.");
         return 0;
@@ -87,12 +87,12 @@ int withdraw(BankAccount account, double amount)
         return 0;
     }
 
-    account.balance = account.balance - amount;
+    account->balance = account->balance - amount;
 
     return 1;
 }
 
-int deposit(BankAccount account, double amount)
+int deposit(BankAccount *account, double amount)
 {
     if (amount <= 0)
     {
@@ -100,7 +100,7 @@ int deposit(BankAccount account, double amount)
         return 0;
     }
 
-    account.balance += amount;
+    account->balance += amount;
 
     return 1;
 }

@@ -7,7 +7,7 @@
 #include "accounts.h"
 #include "database.h"
 
-void showMenu(Session *session)
+void showMenu(Session *session, BankAccountsTable *accounts)
 {
     printf("\nWelcome %s", session->username);
 
@@ -17,28 +17,47 @@ void showMenu(Session *session)
     printf("\n3.Transaction");
     printf("\n4.Prosess all transacions");
     printf("\n5.Logout");
-    int choise = 0;
-    printf("\nYour choise is: ");
-    scanf("%d", &choise);
     while (1)
     {
+        int choise = 0;
+        printf("\nYour choise is: ");
+        scanf("%d", &choise);
+
+        // Find the account of currenlty logged user
+        BankAccount *loggedUserAccount = findAccountByUserID(accounts, session->userId);
+        if (!loggedUserAccount)
+        {
+            printf("\nYour account cannot be found.");
+            break;
+        }
+
         switch (choise)
         {
         case 1:
-            /* code */
+            double amountToWithdraw = 0;
+            printf("\nHow much do you want to withdraw: ");
+            scanf("%lf", &amountToWithdraw);
+            if (withdraw(loggedUserAccount, amountToWithdraw))
+                printf("\nSuccessfully withdrawn %lf!", amountToWithdraw);
             break;
         case 2:
-            /* code */
+            double amountToDeposit = 0;
+            printf("\nHow much do you want to deposit: ");
+            scanf("%lf", &amountToDeposit);
+            if (deposit(loggedUserAccount, amountToDeposit))
+                printf("\nSuccessfully deposited %lf!", amountToDeposit);
             break;
         case 3:
             /* code */
+            // Have access to loggedUserAccount here as well the userId (from the session)
             break;
         case 4:
             /* code */
+            // Have access to loggedUserAccount here as well the userId (from the session)
             break;
         case 5:
             printf("You succeesfully logged out.");
-            session = NULL;
+            deleleSession(session);
             return;
 
         default:
@@ -71,7 +90,7 @@ int main()
             if (loggedUser)
             {
                 session = initSession(loggedUser);
-                showMenu(session);
+                showMenu(session, accounts);
             }
         }
         else if (choise == 2)

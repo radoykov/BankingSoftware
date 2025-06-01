@@ -20,15 +20,15 @@ typedef struct BankAccountsTable
 
 } BankAccountsTable;
 
-int withdraw(BankAccount account, double amount);
-int deposit(BankAccount account, double amount); 
+int withdraw(BankAccount *account, double amount);
+int deposit(BankAccount *account, double amount); 
 
 BankAccount *createBankAccount(int userId); 
 
 BankAccountsTable *initBankAccounts();
 void addBankAccount(BankAccountsTable *map, BankAccount *account);
-BankAccount *findByIban(BankAccountsTable *map, char *iban);
-BankAccount *findByUserID(BankAccountsTable *map, int userID);
+BankAccount *findAccountByIban(BankAccountsTable *map, char *iban);
+BankAccount *findAccountByUserID(BankAccountsTable *map, int userID);
 void releaseBankAccounts(BankAccountsTable * bat);
 
 static void generateIban(char newIban[IBAN_MAX_LEN]);
