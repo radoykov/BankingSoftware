@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "queue.h"
 
-static QNode *createQnode(int val)
+static QNode *createQnode(void* val)
 {
     QNode *node = (QNode *)malloc(sizeof(QNode));
     node->val = val;
@@ -19,7 +19,7 @@ Queue *initQueue()
     return queue;
 }
 
-void enqueue(Queue *queue, int val)
+void enqueue(Queue *queue, void* val)
 {
     QNode *node = createQnode(val);
     if (queue->front == NULL)
@@ -66,13 +66,18 @@ void releaseQueue(Queue *queue)
     free(queue);
 }
 
+void printInt(void *data) {
+    printf("%d", *(int *)data);
+}
+
 void printQueue(Queue *queue)
 {
     QNode *it = queue->front;
     printf("\nQueue: ");
     while (it != NULL)
     {
-        printf("%d -> ", it->val);
+        printInt(it->val);
+        printf(" -> ");
         it = it->next;
     }
     printf("NULL");

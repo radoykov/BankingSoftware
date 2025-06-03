@@ -3,7 +3,7 @@
 
 typedef struct QNode
 {
-    int val;
+    void* val;
     struct QNode *next;
 } QNode;
 
@@ -13,10 +13,10 @@ typedef struct Queue
     QNode *rear;
 } Queue;
 
-static QNode *createQnode(int val);
+static QNode *createQnode(void* val);
 Queue *initQueue();
 
-void enqueue(Queue *queue, int val);
+void enqueue(Queue *queue, void* val);
 int dequeue(Queue *queue);
 
 void releaseQueue(Queue *queue);

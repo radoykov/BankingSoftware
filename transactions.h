@@ -1,6 +1,7 @@
 #ifndef TRANSACTIONS_H
 #define TRANSACTIONS_H
 // plan to use queue to keep all transactions
+#include "structures/queue/queue.h"
 #define IBAN_MAX_LEN 35
 typedef enum Operation
 {

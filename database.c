@@ -113,3 +113,7 @@ void readAllAccountFromFile(BankAccountsTable *accounts)
 
     fclose(file);
 }
+
+void saveTransactionsInFile(){
+    
+}
