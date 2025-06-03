@@ -18,7 +18,7 @@ typedef struct BankAccountsTable
 {
     HashMap *byIban;
     HashMap *byUserID;
-    uint count;
+    uint lastUsedId;
 
 } BankAccountsTable;
 

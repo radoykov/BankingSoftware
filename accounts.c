@@ -45,7 +45,7 @@ BankAccountsTable *initBankAccounts()
     CHECK(newMap);
     newMap->byIban = initHashMap();
     newMap->byUserID = initHashMap();
-    newMap->count = 0;
+    newMap->lastUsedId = 0;
 
     return newMap;
 }
@@ -64,8 +64,8 @@ void addBankAccount(BankAccountsTable *accounts, BankAccount *account)
 {
     set(accounts->byIban, account, selectAccountIbanKey, compareStrings, hashString);
     set(accounts->byUserID, account, selectAccountUserIdKey, compareUints, hashUint);
-    account->id = accounts->count + 1;
-    accounts->count++;
+    account->id = accounts->lastUsedId + 1;
+    accounts->lastUsedId++;
 }
 
 BankAccount *findAccountByIban(BankAccountsTable *accounts, char *iban)

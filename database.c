@@ -33,6 +33,10 @@ void readAllUsersFromFile(UsersTable *users)
             break;
         }
         addUser(users, user);
+        if (user->id > users->lastUsedId)
+        {
+            users->lastUsedId = user->id;
+        }
     }
 
     if (!feof(file))
@@ -45,8 +49,6 @@ void readAllUsersFromFile(UsersTable *users)
 }
 
 // for accounts
-
-static int accountCount = 0;
 
 void saveAccountInFile(BankAccount *account)
 {
@@ -62,31 +64,46 @@ void saveAccountInFile(BankAccount *account)
     fclose(file);
 }
 
-// void updateAccountInFile(BankAccount *account, double amount)
-// {
-//     FILE *file = fopen("data/accounts.bin", "ab+");
-//     CHECK_FILEf(file);
-    
-//     while (1)
-//     {
-//         BankAccount *account = initBankAccount();
-//         if (fread(account, sizeof(BankAccount), 1, file) != 1)
-//         {
-//             free(account);
-//             break;
-//         }
-//         accountCount++;
-//         // addBankAccount(accounts, account);
-//     }
+void updateAccountInFile(BankAccount *account)
+{
+    FILE *file = fopen("data/accounts.bin", "rb+");
+    CHECK_FILE(file);
 
-//     if (!feof(file))
-//     {
-//         printf("Error reading from file");
-//         exit(1);
-//     }
+    // implementing binary search for searching the Account in file.O(logn)
+    fseek(file, 0, SEEK_END); 
+    uint size = ftell(file) / sizeof(BankAccount);
+    uint left = 0;
+    uint right = size - 1;
+    BankAccount *currAccount = initBankAccount();
 
-//     fclose(file);
-// }
+    while (left <= right)
+    {
+
+        uint middle = left + (right - left) / 2;
+
+        fseek(file, middle * sizeof(BankAccount), SEEK_SET);
+        fread(currAccount, sizeof(BankAccount), 1, file);
+
+        if (account->id == currAccount->id)
+        {
+            fseek(file, -(long)sizeof(BankAccount), SEEK_CUR);
+            fwrite(account, sizeof(BankAccount), 1, file);
+            fclose(file);
+
+            return;
+        }
+        if (account->id < currAccount->id)
+        {
+            right = middle - 1;
+        }
+        else
+        {
+            left = middle + 1;
+        }
+    }
+    printf("\nAccount cannot be found in the file.");
+    fclose(file);
+}
 
 void readAllAccountFromFile(BankAccountsTable *accounts)
 {
@@ -103,6 +120,10 @@ void readAllAccountFromFile(BankAccountsTable *accounts)
             break;
         }
         addBankAccount(accounts, account);
+        if (account->id > accounts->lastUsedId)
+        {
+            accounts->lastUsedId = account->id;
+        }
     }
 
     if (!feof(file))

@@ -29,7 +29,7 @@ typedef struct UsersTable
 {
     HashMap *byId;
     HashMap *byUsername;
-    uint count;
+    uint lastUsedId;
 
 } UsersTable;
 

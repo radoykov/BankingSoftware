@@ -24,7 +24,7 @@ UsersTable *initUsers()
     CHECK(users);
     users->byId = initHashMap();
     users->byUsername = initHashMap();
-    users->count = 0;
+    users->lastUsedId = 0;
 
     return users;
 }
@@ -61,8 +61,8 @@ void addUser(UsersTable *users, User *user)
 {
     set(users->byId, user, selectUserIdKey, compareUints, hashUint);
     set(users->byUsername, user, selectUsernameKey, compareStrings, hashString);
-    user->id = users->count + 1;
-    users->count++;
+    user->id = users->lastUsedId + 1;
+    users->lastUsedId++;
 }
 
 User *findUserByUsername(UsersTable *users, char *username)

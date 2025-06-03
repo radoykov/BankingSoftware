@@ -11,14 +11,14 @@ void showMenu(Session *session, BankAccountsTable *accounts)
 {
     printf("\nWelcome %s", session->username);
 
-    printf("\nChoose from this options:");
-    printf("\n1.Withdraw");
-    printf("\n2.Deposit");
-    printf("\n3.Transaction");
-    printf("\n4.Prosess all transacions");
-    printf("\n5.Logout");
     while (1)
     {
+        printf("\nChoose from this options:");
+        printf("\n1.Withdraw");
+        printf("\n2.Deposit");
+        printf("\n3.Transaction");
+        printf("\n4.Prosess all transacions");
+        printf("\n5.Logout");
         int choise = 0;
         printf("\nYour choise is: ");
         scanf("%d", &choise);
@@ -31,21 +31,29 @@ void showMenu(Session *session, BankAccountsTable *accounts)
             break;
         }
 
-        switch (choise)
+        switch (choise) // add to show how much you have in the acccount !
         {
         case 1:
             double amountToWithdraw = 0;
             printf("\nHow much do you want to withdraw: ");
             scanf("%lf", &amountToWithdraw);
             if (withdraw(loggedUserAccount, amountToWithdraw))
+            {
+                updateAccountInFile(loggedUserAccount);
                 printf("\nSuccessfully withdrawn %lf!", amountToWithdraw);
+            }
+            
             break;
         case 2:
             double amountToDeposit = 0;
             printf("\nHow much do you want to deposit: ");
             scanf("%lf", &amountToDeposit);
             if (deposit(loggedUserAccount, amountToDeposit))
+            {
+                updateAccountInFile(loggedUserAccount);
                 printf("\nSuccessfully deposited %lf!", amountToDeposit);
+            }
+    
             break;
         case 3:
             /* code */
@@ -74,7 +82,7 @@ int main()
     readAllUsersFromFile(users);
     BankAccountsTable *accounts = initBankAccounts();
     readAllAccountFromFile(accounts);
-    //transactions
+    // transactions
 
     while (1)
     {
