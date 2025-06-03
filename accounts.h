@@ -23,6 +23,7 @@ typedef struct BankAccountsTable
 int withdraw(BankAccount *account, double amount);
 int deposit(BankAccount *account, double amount); 
 
+BankAccount *initBankAccount();
 BankAccount *createBankAccount(int userId); 
 
 BankAccountsTable *initBankAccounts();

@@ -48,8 +48,7 @@ User *initUser()
 
 User *createUser(char *username, char *password)
 {
-    User *newUser = (User *)malloc(sizeof(User));
-    CHECK(newUser);
+    User *newUser = initUser();
     newUser->id = 0;
     strcpy(newUser->username, username);
     hashPassword(password, newUser->hashedPassword);

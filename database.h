@@ -1,6 +1,7 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 #include "users.h"
+#include "accounts.h"
 #define CHECK_FILE(p)                           \
     if (!p)                                     \
     {                                           \
@@ -20,5 +21,9 @@
 
 void saveUserInFile(User *user);
 void readAllUsersFromFile(UsersTable *users);
+
+void saveAccountInFile(BankAccount *account);
+// void updateAccountInFile(BankAccount *account, double amount);
+void readAllAccountFromFile(BankAccountsTable *accounts);
 
 #endif

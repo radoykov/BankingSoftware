@@ -22,7 +22,7 @@ void showMenu(Session *session, BankAccountsTable *accounts)
         int choise = 0;
         printf("\nYour choise is: ");
         scanf("%d", &choise);
-
+        //printf("\nsesid %d", session->userId);
         // Find the account of currenlty logged user
         BankAccount *loggedUserAccount = findAccountByUserID(accounts, session->userId);
         if (!loggedUserAccount)
@@ -73,6 +73,7 @@ int main()
     UsersTable *users = initUsers();
     readAllUsersFromFile(users);
     BankAccountsTable *accounts = initBankAccounts();
+    readAllAccountFromFile(accounts);
 
     while (1)
     {
@@ -99,9 +100,14 @@ int main()
             User *regUser = registerUser(users);
             if (regUser)
             {
+                //printf("\nUserIdReg:%d", regUser->id);
                 saveUserInFile(regUser);
                 BankAccount *newAccount = createBankAccount(regUser->id);
+                //printf("\nBAReg:%d", newAccount->userId);
+
                 addBankAccount(accounts, newAccount);
+                //printf("\nKey:%d", accounts->byUserID->array[regUser->id % 11]->key);
+                saveAccountInFile(newAccount);
                 // Here we may want to login the user directly.
             }
         }

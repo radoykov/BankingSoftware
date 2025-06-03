@@ -3,24 +3,6 @@
 #include <string.h>
 #include "accounts.h"
 
-// int generateIDNumber()
-// {
-//     int newID = 0;
-//     int min = 0, max = 9;
-
-//     for (int i = 0; i < 12; i++)
-//     {
-//         int random_number = 0;
-//         random_number = rand() % (max - min + 1) + min;
-//         if (i == 0 && random_number == 0)
-//         {
-//             random_number = rand() % 9 + 1; // making sure that the ID doesnt begin with 0
-//         }
-//         newID = newID * 10 + random_number;
-//     }
-//     return newID;
-// }
-
 static void generateIban(char newIban[IBAN_MAX_LEN])
 {
     for (int i = 0; i < IBAN_MAX_LEN - 1; i++)
@@ -38,13 +20,21 @@ static void generateIban(char newIban[IBAN_MAX_LEN])
     newIban[IBAN_MAX_LEN - 1] = '\0';
 }
 
-BankAccount *createBankAccount(int userId)
+BankAccount *initBankAccount()
 {
     BankAccount *newAccount = (BankAccount *)malloc(sizeof(BankAccount));
     CHECK(newAccount);
+ 
+    return newAccount;
+}
+
+BankAccount *createBankAccount(int userId)
+{
+    BankAccount *newAccount = initBankAccount();
     newAccount->balance = 0.0;
     newAccount->userId = userId;
     generateIban(newAccount->iban);
+    
     return newAccount;
 }
 
