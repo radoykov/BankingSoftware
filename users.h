@@ -1,6 +1,6 @@
 #ifndef USERS_H
 #define USERS_H
-
+#include "types.h"
 #include "structures/hashTable/hashMap.h"
 #include "sha256.h"
 #define USERNAME_MAX_LEN 10
@@ -12,14 +12,14 @@
 
 typedef struct Session
 {
-    int userId;
+    uint userId;
     char username[USERNAME_MAX_LEN];
 
 } Session;
 
 typedef struct User
 {
-    int id;
+    uint id;
     char username[USERNAME_MAX_LEN];
     char hashedPassword[HASH_HEXADECIMAL_SIZE];
 
@@ -29,6 +29,7 @@ typedef struct UsersTable
 {
     HashMap *byId;
     HashMap *byUsername;
+    uint count;
 
 } UsersTable;
 
@@ -39,7 +40,7 @@ UsersTable *initUsers();
 User *createUser(char *username, char *password);
 void addUser(UsersTable *users, User *user);
 User *findUserByUsername(UsersTable *users, char *username);
-User *findUserById(UsersTable *users, int id);
+User *findUserById(UsersTable *users, uint id);
 
 static void hashPassword(const char *password, char *output_hexadecimal);
 static int generateUniqueId(HashMap *map);

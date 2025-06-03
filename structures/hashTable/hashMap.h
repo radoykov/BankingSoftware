@@ -1,6 +1,6 @@
 #ifndef HASHMAP_H
 #define HASHMAP_H
-
+#include "../../types.h"
 #define HASH_MAP_SIZE 11 //Use prime number for better distribution.
 
 #define CHECK(ptr)                          \
@@ -21,7 +21,7 @@ typedef struct HashMap
     Node **array;
 } HashMap;
 
-typedef unsigned long (*HashFunc)(void* key);
+typedef ulong (*HashFunc)(void* key);
 typedef void* (*KeySelector)(void* data);
 typedef int (*KeyComparator)(void* key1, void* key2);
 
@@ -34,9 +34,9 @@ HashMap *initHashMap();
 void printHashMap(HashMap *hashMap, KeySelector selector);
 void freeHashMap(HashMap *hashMap);
 
-int compareInts(void* key1, void* key2);
+int compareUints(void* key1, void* key2);
 int compareStrings(void* key1, void* key2);
-unsigned long hashInt(void *key);
-unsigned long hashString(void *key);
+ulong hashUint(void *key);
+ulong hashString(void *key);
 
 #endif

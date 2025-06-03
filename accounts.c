@@ -28,10 +28,11 @@ BankAccount *initBankAccount()
     return newAccount;
 }
 
-BankAccount *createBankAccount(int userId)
+BankAccount *createBankAccount(uint userId)
 {
     BankAccount *newAccount = initBankAccount();
     newAccount->balance = 0.0;
+    newAccount->id = 0;
     newAccount->userId = userId;
     generateIban(newAccount->iban);
 
@@ -44,6 +45,8 @@ BankAccountsTable *initBankAccounts()
     CHECK(newMap);
     newMap->byIban = initHashMap();
     newMap->byUserID = initHashMap();
+    newMap->count = 0;
+
     return newMap;
 }
 
@@ -60,7 +63,9 @@ static void *selectAccountUserIdKey(void *data)
 void addBankAccount(BankAccountsTable *accounts, BankAccount *account)
 {
     set(accounts->byIban, account, selectAccountIbanKey, compareStrings, hashString);
-    set(accounts->byUserID, account, selectAccountUserIdKey, compareInts, hashInt);
+    set(accounts->byUserID, account, selectAccountUserIdKey, compareUints, hashUint);
+    account->id = accounts->count + 1;
+    accounts->count++;
 }
 
 BankAccount *findAccountByIban(BankAccountsTable *accounts, char *iban)
@@ -68,9 +73,9 @@ BankAccount *findAccountByIban(BankAccountsTable *accounts, char *iban)
     return (BankAccount *)get(accounts->byIban, iban, selectAccountIbanKey, compareStrings, hashString);
 }
 
-BankAccount *findAccountByUserID(BankAccountsTable *accounts, int userID)
+BankAccount *findAccountByUserID(BankAccountsTable *accounts, uint userID)
 {
-    return (BankAccount *)get(accounts->byUserID, &userID, selectAccountUserIdKey, compareInts, hashInt);
+    return (BankAccount *)get(accounts->byUserID, &userID, selectAccountUserIdKey, compareUints, hashUint);
 }
 
 int withdraw(BankAccount *account, double amount)

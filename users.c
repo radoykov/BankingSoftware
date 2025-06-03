@@ -24,17 +24,9 @@ UsersTable *initUsers()
     CHECK(users);
     users->byId = initHashMap();
     users->byUsername = initHashMap();
-    return users;
-}
+    users->count = 0;
 
-static int generateUniqueId(HashMap *map)
-{
-    int id;
-    // do
-    // {
-    id = rand() % 1000000;
-    // } while (getByIntKey(map, id));
-    return id;
+    return users;
 }
 
 User *initUser()
@@ -67,9 +59,10 @@ static void *selectUsernameKey(void *data)
 
 void addUser(UsersTable *users, User *user)
 {
-    user->id = generateUniqueId(users->byId);
-    set(users->byId, user, selectUserIdKey, compareInts, hashInt);
+    set(users->byId, user, selectUserIdKey, compareUints, hashUint);
     set(users->byUsername, user, selectUsernameKey, compareStrings, hashString);
+    user->id = users->count + 1;
+    users->count++;
 }
 
 User *findUserByUsername(UsersTable *users, char *username)
@@ -77,9 +70,9 @@ User *findUserByUsername(UsersTable *users, char *username)
     return (User *)get(users->byUsername, username, selectUsernameKey, compareStrings, hashString);
 }
 
-User *findUserById(UsersTable *users, int id)
+User *findUserById(UsersTable *users, uint id)
 {
-    return (User *)get(users->byId, &id, selectUserIdKey, compareInts, hashInt);
+    return (User *)get(users->byId, &id, selectUserIdKey, compareUints, hashUint);
 }
 
 User *loginUser(UsersTable *users)

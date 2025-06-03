@@ -24,10 +24,10 @@ HashMap *initHashMap()
 }
 
 // djb2, by Daniel J. Bernstein
-unsigned long hashString(void *key)
+ulong hashString(void *key)
 {
     char *keyAsChar = (char *)key;
-    unsigned long hash = 5381;
+    ulong hash = 5381;
     int c;
     while ((c = *keyAsChar++))
         hash = ((hash << 5) + hash) + c;
@@ -37,7 +37,7 @@ unsigned long hashString(void *key)
 void set(HashMap *hashMap, void *data, KeySelector selector, KeyComparator comparator, HashFunc hashFunc)
 {
     void *key = selector(data);
-    unsigned long index = hashFunc(key) % HASH_MAP_SIZE;
+    ulong index = hashFunc(key) % HASH_MAP_SIZE;
 
     if (hashMap->array[index])
     {
@@ -63,7 +63,7 @@ void set(HashMap *hashMap, void *data, KeySelector selector, KeyComparator compa
 
 void *get(HashMap *hashMap, void *searchKey, KeySelector selector, KeyComparator comparator, HashFunc hashFunc)
 {
-    unsigned long index = hashFunc(searchKey) % HASH_MAP_SIZE;
+    ulong index = hashFunc(searchKey) % HASH_MAP_SIZE;
 
     if (hashMap->array[index])
     {
@@ -80,6 +80,7 @@ void *get(HashMap *hashMap, void *searchKey, KeySelector selector, KeyComparator
 
     return NULL;
 }
+
 
 void printHashMap(HashMap *hashMap, KeySelector keySelector)
 {
@@ -116,9 +117,9 @@ void freeHashMap(HashMap *hashMap)
     free(hashMap);
 }
 
-int compareInts(void *key1, void *key2)
+int compareUints(void *key1, void *key2)
 {
-    return *((int *)key1) - *((int *)key2);
+    return *((uint *)key1) - *((uint *)key2);
 }
 
 int compareStrings(void *key1, void *key2)
@@ -126,7 +127,7 @@ int compareStrings(void *key1, void *key2)
     return strcmp((char *)key1, (char *)key2);
 }
 
-unsigned long hashInt(void *key)
+ulong hashUint(void *key)
 {
-    return (*(long *)key) % HASH_MAP_SIZE;
+    return (*(ulong *)key);
 }

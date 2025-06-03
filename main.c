@@ -22,7 +22,7 @@ void showMenu(Session *session, BankAccountsTable *accounts)
         int choise = 0;
         printf("\nYour choise is: ");
         scanf("%d", &choise);
-        //printf("\nsesid %d", session->userId);
+
         // Find the account of currenlty logged user
         BankAccount *loggedUserAccount = findAccountByUserID(accounts, session->userId);
         if (!loggedUserAccount)
@@ -111,7 +111,6 @@ int main()
         }
         else if (choise == 3)
         {
-            // write here if needed
             releaseUsers(users);
             releaseBankAccounts(accounts);
             printf("\nThe program have finished.");
