@@ -3,12 +3,11 @@
 #include <string.h>
 #include "hashMap.h"
 
-Node *initNode(void *key, void *val)
+Node *initNode(void *data)
 {
     Node *newNode = (Node *)malloc(sizeof(Node));
     CHECK(newNode);
-    newNode->key = key;
-    newNode->val = val;
+    newNode->data = data;
     newNode->next = NULL;
 
     return newNode;
@@ -24,33 +23,21 @@ HashMap *initHashMap()
     return newMap;
 }
 
-// abv
-// a + b + v
-// int hash(char *key)
-// {
-//     int value = 0;
-//     for (int i = 0; key[i] != '\0'; i++)
-//     {
-//         value += key[i];
-//     }
-
-//     return value;
-// }
-
-
-//djb2, by Daniel J. Bernstein
-unsigned long hash(const char* key) {
+// djb2, by Daniel J. Bernstein
+unsigned long hashString(void *key)
+{
+    char *keyAsChar = (char *)key;
     unsigned long hash = 5381;
     int c;
-    while ((c = *key++))
+    while ((c = *keyAsChar++))
         hash = ((hash << 5) + hash) + c;
     return hash;
 }
 
-void setByStringKey(HashMap *hashMap, char *key, void *val)
+void set(HashMap *hashMap, void *data, KeySelector selector, KeyComparator comparator, HashFunc hashFunc)
 {
-
-    int index = hash(key) % HASH_MAP_SIZE;
+    void *key = selector(data);
+    unsigned long index = hashFunc(key) % HASH_MAP_SIZE;
 
     if (hashMap->array[index])
     {
@@ -58,52 +45,25 @@ void setByStringKey(HashMap *hashMap, char *key, void *val)
 
         while (current->next)
         {
-            if (strcmp((char *)current->key, key) == 0)
+            if (comparator(selector(current), key) == 0)
             {
-                current->val = val;
+                current->data = data;
                 return;
             }
             current = current->next;
         }
 
-        current->next = initNode(key, val);
+        current->next = initNode(data);
     }
     else
     {
-        hashMap->array[index] = initNode(key, val);
+        hashMap->array[index] = initNode(data);
     }
 }
 
-void setByIntKey(HashMap *hashMap, int key, void *val)
+void *get(HashMap *hashMap, void *searchKey, KeySelector selector, KeyComparator comparator, HashFunc hashFunc)
 {
-
-    int index = key % HASH_MAP_SIZE;
-
-    if (hashMap->array[index])
-    {
-        Node *current = hashMap->array[index];
-
-        while (current->next)
-        {
-            if (*(int *)current->key == key)
-            {
-                current->val = val;
-                return;
-            }
-            current = current->next;
-        }
-
-        current->next = initNode(&key, val);
-    }
-    else
-    {
-        hashMap->array[index] = initNode(&key, val);
-    }
-}
-
-void *getByStringKey(HashMap *hashMap, char *key)
-{
-    int index = hash(key) % HASH_MAP_SIZE;
+    unsigned long index = hashFunc(searchKey) % HASH_MAP_SIZE;
 
     if (hashMap->array[index])
     {
@@ -111,10 +71,9 @@ void *getByStringKey(HashMap *hashMap, char *key)
 
         while (current)
         {
-            if (strcmp((char *)current->key, key) == 0)
-            {
-                return current->val;
-            }
+            void *currentKey = selector(current->data);
+            if (comparator(currentKey, searchKey) == 0)
+                return current->data;
             current = current->next;
         }
     }
@@ -122,28 +81,7 @@ void *getByStringKey(HashMap *hashMap, char *key)
     return NULL;
 }
 
-void *getByIntKey(HashMap *hashMap, int key)
-{
-    int index = key % HASH_MAP_SIZE;
-
-    if (hashMap->array[index])
-    {
-        Node *current = hashMap->array[index];
-
-        while (current)
-        {
-            if (*(int *)current->key == key)
-            {
-                return current->val;
-            }
-            current = current->next;
-        }
-    }
-
-    return NULL;
-}
-
-void printHashMap(HashMap *hashMap)
+void printHashMap(HashMap *hashMap, KeySelector keySelector)
 {
     for (int i = 0; i < HASH_MAP_SIZE; i++)
     {
@@ -153,7 +91,7 @@ void printHashMap(HashMap *hashMap)
             printf("[%d]: ", i);
             while (curr)
             {
-                printf("%s %d, ", curr->key, curr->val);
+                printf("%s %d, ", keySelector(curr), curr->data);
                 curr = curr->next;
             }
             printf("\n");
@@ -176,4 +114,19 @@ void freeHashMap(HashMap *hashMap)
 
     free(hashMap->array);
     free(hashMap);
+}
+
+int compareInts(void *key1, void *key2)
+{
+    return *((int *)key1) - *((int *)key2);
+}
+
+int compareStrings(void *key1, void *key2)
+{
+    return strcmp((char *)key1, (char *)key2);
+}
+
+unsigned long hashInt(void *key)
+{
+    return (*(long *)key) % HASH_MAP_SIZE;
 }

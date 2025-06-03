@@ -48,6 +48,9 @@ int validatePassword(char *password);
 
 void releaseUsers(UsersTable *ut);
 
+static void* selectUserIdKey(void* data);
+static void* selectUsernameKey(void* data);
+
 // Session menagement
 Session *initSession(User *user);
 void deleleSession(Session *session);

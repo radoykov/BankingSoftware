@@ -32,6 +32,8 @@ BankAccount *findAccountByIban(BankAccountsTable *map, char *iban);
 BankAccount *findAccountByUserID(BankAccountsTable *map, int userID);
 void releaseBankAccounts(BankAccountsTable * bat);
 
+static void *selectAccountIbanKey(void *data);
+static void *selectAccountUserIdKey(void *data);
 static void generateIban(char newIban[IBAN_MAX_LEN]);
 
 #endif

@@ -30,10 +30,10 @@ UsersTable *initUsers()
 static int generateUniqueId(HashMap *map)
 {
     int id;
-    do
-    {
-        id = rand() % 1000000;
-    } while (getByIntKey(map, id));
+    // do
+    // {
+    id = rand() % 1000000;
+    // } while (getByIntKey(map, id));
     return id;
 }
 
@@ -45,7 +45,6 @@ User *initUser()
     return newUser;
 }
 
-
 User *createUser(char *username, char *password)
 {
     User *newUser = initUser();
@@ -56,21 +55,31 @@ User *createUser(char *username, char *password)
     return newUser;
 }
 
+static void *selectUserIdKey(void *data)
+{
+    return &((User *)data)->id;
+}
+
+static void *selectUsernameKey(void *data)
+{
+    return ((User *)data)->username;
+}
+
 void addUser(UsersTable *users, User *user)
 {
     user->id = generateUniqueId(users->byId);
-    setByIntKey(users->byId, user->id, user);
-    setByStringKey(users->byUsername, user->username, user);
+    set(users->byId, user, selectUserIdKey, compareInts, hashInt);
+    set(users->byUsername, user, selectUsernameKey, compareStrings, hashString);
 }
 
 User *findUserByUsername(UsersTable *users, char *username)
 {
-    return (User *)getByStringKey(users->byUsername, username);
+    return (User *)get(users->byUsername, username, selectUsernameKey, compareStrings, hashString);
 }
 
 User *findUserById(UsersTable *users, int id)
 {
-    return (User *)getByIntKey(users->byId, id);
+    return (User *)get(users->byId, &id, selectUserIdKey, compareInts, hashInt);
 }
 
 User *loginUser(UsersTable *users)
@@ -154,7 +163,7 @@ int validatePassword(char *password)
     {
         printf("Error: Password length must be between %d and %d \n", PASSWORD_MIN_LEN, PASSWORD_MAX_LEN);
         return 0;
-    } 
+    }
     return 1;
 }
 
@@ -168,7 +177,7 @@ void releaseUsers(UsersTable *ut)
             Node *temp = curr;
             curr = curr->next;
             // user memory
-            free(temp->val);
+            free(temp->data);
         }
     }
     freeHashMap(ut->byUsername);
@@ -181,7 +190,7 @@ Session *initSession(User *user)
     CHECK(s);
     s->userId = user->id;
     strcpy(s->username, user->username);
-    
+
     return s;
 }
 

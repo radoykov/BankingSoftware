@@ -12,8 +12,7 @@
 
 typedef struct Node
 {
-    void *key;
-    void *val;
+    void *data;
     struct Node *next;
 } Node;
 
@@ -22,14 +21,22 @@ typedef struct HashMap
     Node **array;
 } HashMap;
 
-Node *initNode(void *key, void *val);
+typedef unsigned long (*HashFunc)(void* key);
+typedef void* (*KeySelector)(void* data);
+typedef int (*KeyComparator)(void* key1, void* key2);
+
+void set(HashMap *hashMap, void *data, KeySelector selector, KeyComparator comparator, HashFunc hashFunc);
+void *get(HashMap *hashMap, void *searchKey, KeySelector selector, KeyComparator comparator, HashFunc hashFunc);
+
+Node *initNode(void *data);
 HashMap *initHashMap();
-unsigned long hash(const char *key);
-void setByStringKey(HashMap *hashMap, char *key, void *val);
-void setByIntKey(HashMap *hashMap, int key, void *val);
-void *getByStringKey(HashMap *hashMap, char *key);
-void *getByIntKey(HashMap *hashMap, int key);
-void printHashMap(HashMap *hashMap);
+
+void printHashMap(HashMap *hashMap, KeySelector selector);
 void freeHashMap(HashMap *hashMap);
+
+int compareInts(void* key1, void* key2);
+int compareStrings(void* key1, void* key2);
+unsigned long hashInt(void *key);
+unsigned long hashString(void *key);
 
 #endif

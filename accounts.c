@@ -24,7 +24,7 @@ BankAccount *initBankAccount()
 {
     BankAccount *newAccount = (BankAccount *)malloc(sizeof(BankAccount));
     CHECK(newAccount);
- 
+
     return newAccount;
 }
 
@@ -34,7 +34,7 @@ BankAccount *createBankAccount(int userId)
     newAccount->balance = 0.0;
     newAccount->userId = userId;
     generateIban(newAccount->iban);
-    
+
     return newAccount;
 }
 
@@ -47,21 +47,30 @@ BankAccountsTable *initBankAccounts()
     return newMap;
 }
 
-void addBankAccount(BankAccountsTable *map, BankAccount *account)
+static void *selectAccountIbanKey(void *data)
 {
-    
-    setByStringKey(map->byIban, account->iban, account);
-    setByIntKey(map->byUserID, account->userId, account);
+    return ((BankAccount *)data)->iban;
 }
 
-BankAccount *findAccountByIban(BankAccountsTable *map, char *iban)
+static void *selectAccountUserIdKey(void *data)
 {
-    return (BankAccount *)getByStringKey(map->byIban, iban);
+    return &((BankAccount *)data)->userId;
 }
 
-BankAccount *findAccountByUserID(BankAccountsTable *map, int userID)
+void addBankAccount(BankAccountsTable *accounts, BankAccount *account)
 {
-    return (BankAccount *)getByIntKey(map->byUserID, userID);
+    set(accounts->byIban, account, selectAccountIbanKey, compareStrings, hashString);
+    set(accounts->byUserID, account, selectAccountUserIdKey, compareInts, hashInt);
+}
+
+BankAccount *findAccountByIban(BankAccountsTable *accounts, char *iban)
+{
+    return (BankAccount *)get(accounts->byIban, iban, selectAccountIbanKey, compareStrings, hashString);
+}
+
+BankAccount *findAccountByUserID(BankAccountsTable *accounts, int userID)
+{
+    return (BankAccount *)get(accounts->byUserID, &userID, selectAccountUserIdKey, compareInts, hashInt);
 }
 
 int withdraw(BankAccount *account, double amount)
@@ -95,7 +104,7 @@ int deposit(BankAccount *account, double amount)
     return 1;
 }
 
-void releaseBankAccounts(BankAccountsTable * bat)
+void releaseBankAccounts(BankAccountsTable *bat)
 {
     for (int i = 0; i < HASH_MAP_SIZE; i++)
     {
@@ -105,7 +114,7 @@ void releaseBankAccounts(BankAccountsTable * bat)
             Node *temp = curr;
             curr = curr->next;
             // account memory
-            free(temp->val);
+            free(temp->data);
         }
     }
     freeHashMap(bat->byUserID);

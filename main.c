@@ -74,6 +74,7 @@ int main()
     readAllUsersFromFile(users);
     BankAccountsTable *accounts = initBankAccounts();
     readAllAccountFromFile(accounts);
+    //transactions
 
     while (1)
     {
@@ -100,13 +101,10 @@ int main()
             User *regUser = registerUser(users);
             if (regUser)
             {
-                //printf("\nUserIdReg:%d", regUser->id);
                 saveUserInFile(regUser);
                 BankAccount *newAccount = createBankAccount(regUser->id);
-                //printf("\nBAReg:%d", newAccount->userId);
 
                 addBankAccount(accounts, newAccount);
-                //printf("\nKey:%d", accounts->byUserID->array[regUser->id % 11]->key);
                 saveAccountInFile(newAccount);
                 // Here we may want to login the user directly.
             }
@@ -116,7 +114,6 @@ int main()
             // write here if needed
             releaseUsers(users);
             releaseBankAccounts(accounts);
-            deleleSession(session);
             printf("\nThe program have finished.");
             return 0;
         }
