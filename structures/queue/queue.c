@@ -19,6 +19,11 @@ Queue *initQueue()
     return queue;
 }
 
+int isEmpty(Queue *queue)
+{
+return (queue->front == NULL);
+}
+
 void enqueue(Queue *queue, void* val)
 {
     QNode *node = createQnode(val);
@@ -66,7 +71,8 @@ void releaseQueue(Queue *queue)
     free(queue);
 }
 
-void printInt(void *data) {
+void printInt(void *data) 
+{
     printf("%d", *(int *)data);
 }
 
@@ -82,3 +88,5 @@ void printQueue(Queue *queue)
     }
     printf("NULL");
 }
+
+

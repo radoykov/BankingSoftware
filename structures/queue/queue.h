@@ -16,6 +16,8 @@ typedef struct Queue
 static QNode *createQnode(void* val);
 Queue *initQueue();
 
+int isEmpty(Queue *queue);
+
 void enqueue(Queue *queue, void* val);
 int dequeue(Queue *queue);
 
