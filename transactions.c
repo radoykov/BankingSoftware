@@ -24,26 +24,26 @@ Transaction *createTransaction(const char *fromIban, const char *toIban, double 
 
 
 
-void transaction(BankAccount *account,Queue *queue,BankAccountsTable *map,const char *fromIban,const char *toIban,double ammount){
+int transaction(BankAccount *account,Queue *queue,BankAccountsTable *map,const char *fromIban,const char *toIban,double ammount){
  if(!fromIban || !toIban || ammount <= 0){
     printf("\nError: Invalid Iban or transaction ammount.");
-    return;
+    return -1;
  }
  BankAccount *from = findAccountByIban(map,(char *)fromIban);
  BankAccount *to = findAccountByIban(map,(char *)toIban);
  //I don't check the from Iban because the user has already logged in so it must exist.
  if(!to){
    printf("\nError: Receiver or sender account not found.");
-   return;
+   return -1;
  }
  Transaction *current_transaction = createTransaction(fromIban,toIban,ammount);
  if(!current_transaction){
     printf("\nError:Failed to create transaction");
-    return;
+    return -1;
  }  
 
  enqueue(queue,current_transaction);
-
+ return 1;
 }
 
 int executeAllTransactions(Queue *queue,BankAccountsTable *map){

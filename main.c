@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 // #include <time.h>
 #include "users.h"
 // #include "transactions.h"
 #include "accounts.h"
 #include "database.h"
 
-void showMenu(Session *session, BankAccountsTable *accounts)
+void showMenu(Session *session, BankAccountsTable *accounts,Queue *transaction_queue)
 {
     printf("\nWelcome %s", session->username);
 
@@ -15,7 +16,7 @@ void showMenu(Session *session, BankAccountsTable *accounts)
     printf("\n1.Withdraw");
     printf("\n2.Deposit");
     printf("\n3.Transaction");
-    printf("\n4.Prosess all transacions");
+    printf("\n4.Process all transacions");
     printf("\n5.Logout");
     while (1)
     {
@@ -42,18 +43,27 @@ void showMenu(Session *session, BankAccountsTable *accounts)
             break;
         case 2:
             double amountToDeposit = 0;
+
+            
             printf("\nHow much do you want to deposit: ");
             scanf("%lf", &amountToDeposit);
             if (deposit(loggedUserAccount, amountToDeposit))
                 printf("\nSuccessfully deposited %lf!", amountToDeposit);
             break;
         case 3:
-            /* code */
-            // Have access to loggedUserAccount here as well the userId (from the session)
+            double amountToTransfer = 0;
+            char *toIban[IBAN_MAX_LEN];
+
+            printf("\nHow much do you wish to transfer: ");
+            scanf("%lf",&amountToTransfer);
+            printf("Enter the IBAN of the receiver: ");
+            scanf("%s",toIban);
+            if(transaction(loggedUserAccount,transaction_queue,accounts,loggedUserAccount->iban,toIban,amountToTransfer)){
+                printf("Transfer added to your list. Enter 'Process all transacions' to proceed.");
+            }
             break;
         case 4:
-            /* code */
-            // Have access to loggedUserAccount here as well the userId (from the session)
+            executeAllTransactions(transaction_queue,accounts);
             break;
         case 5:
             printf("You succeesfully logged out.");
@@ -71,6 +81,7 @@ int main()
 {
     Session *session = NULL;
     UsersTable *users = initUsers();
+    Queue *transaction_queue = initQueue();
     readAllUsersFromFile(users);
     BankAccountsTable *accounts = initBankAccounts();
     readAllAccountFromFile(accounts);
@@ -92,7 +103,7 @@ int main()
             if (loggedUser)
             {
                 session = initSession(loggedUser);
-                showMenu(session, accounts);
+                showMenu(session, accounts,transaction_queue);
             }
         }
         else if (choise == 2)
