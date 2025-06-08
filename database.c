@@ -135,6 +135,48 @@ void readAllAccountFromFile(BankAccountsTable *accounts)
     fclose(file);
 }
 
-void saveTransactionsInFile(){
-    
+void saveTransactionsInFile(Transaction *transaction){
+    FILE *file = fopen("data/transactions.bin","ab");
+    CHECK_FILE(file);
+    size_t transactionsSaved = fwrite(transaction,sizeof(Transaction),1,file);
+    if(transactionsSaved != 1){
+        printf("Error: Cannot save transactions in file.");
+    }
+
+    fclose(file);
 }
+
+void readAllTransactionsFromFile(Queue *queue){
+    FILE *file = fopen("data/users.bin", "rb");
+    if(!file){
+        return;
+    }
+
+    
+    while (1)
+    {
+        Transaction *t = (Transaction *)malloc(sizeof(Transaction));
+        if (!t)
+        {
+            printf("Memory allocation failed.\n");
+            exit(1);
+        }
+
+        if (fread(t, sizeof(Transaction), 1, file) != 1)
+        {
+            free(t);
+            break;
+        }
+
+        enqueue(queue, t);
+    }
+
+    if (!feof(file))
+    {
+        printf("Error reading from transaction file.\n");
+        exit(1);
+    }
+
+    fclose(file);
+}
+

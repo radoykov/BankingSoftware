@@ -21,8 +21,8 @@ Transaction *createTransaction(const char *fromIban, const char *toIban, double 
 
 
 int transaction(BankAccount *account,Queue *queue,BankAccountsTable *map,const char *fromIban,const char *toIban,double ammount){
- if(!fromIban || !toIban || ammount <= 0){
-    printf("\nError: Invalid Iban or transaction ammount.");
+ if(!fromIban || !toIban){
+    printf("\nError: Invalid Iban.");
     return -1;
  }
  BankAccount *from = findAccountByIban(map,(char *)fromIban);

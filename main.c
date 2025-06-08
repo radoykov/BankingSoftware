@@ -62,7 +62,11 @@ void showMenu(Session *session, BankAccountsTable *accounts, Queue *transaction_
             char toIban[IBAN_MAX_LEN];
 
             printf("\nHow much do you wish to transfer: ");
-            scanf("%lf", &amountToTransfer);
+            if (scanf("%lf", &amountToTransfer) != 1 || amountToTransfer <= 0) {
+            printf("Invalid amount.\n");
+            while (getchar() != '\n');
+            break;
+            }
             printf("Enter the IBAN of the receiver: ");
             scanf("%s", toIban);
             if (transaction(loggedUserAccount, transaction_queue, accounts, loggedUserAccount->iban, toIban, amountToTransfer))
