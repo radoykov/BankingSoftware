@@ -40,7 +40,7 @@ void showMenu(Session *session, BankAccountsTable *accounts)
             if (withdraw(loggedUserAccount, amountToWithdraw))
             {
                 updateAccountInFile(loggedUserAccount);
-                printf("\nSuccessfully withdrawn %lf!", amountToWithdraw);
+                printf("\nSuccessfully withdrawn %.2f! Current balance: %.2f", amountToWithdraw, loggedUserAccount->balance);
             }
             
             break;
@@ -51,7 +51,7 @@ void showMenu(Session *session, BankAccountsTable *accounts)
             if (deposit(loggedUserAccount, amountToDeposit))
             {
                 updateAccountInFile(loggedUserAccount);
-                printf("\nSuccessfully deposited %lf!", amountToDeposit);
+                printf("\nSuccessfully deposited %.2f! Current balance: %.2f", amountToDeposit, loggedUserAccount->balance);
             }
     
             break;
