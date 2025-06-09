@@ -147,7 +147,7 @@ void saveTransactionsInFile(Transaction *transaction){
 }
 
 void readAllTransactionsFromFile(Queue *queue){
-    FILE *file = fopen("data/users.bin", "rb");
+    FILE *file = fopen("data/transactions.bin", "rb");
     if(!file){
         return;
     }

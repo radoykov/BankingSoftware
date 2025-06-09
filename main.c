@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <time.h>
 #include "users.h"
 #include "transactions.h"
 #include "accounts.h"
@@ -34,7 +35,7 @@ void showMenu(Session *session, BankAccountsTable *accounts, Queue *transaction_
 
         switch (choise) // add to show how much you have in the acccount !
         {
-        case 1:
+        case 1:{
             double amountToWithdraw = 0;
             printf("\nHow much do you want to withdraw: ");
             scanf("%lf", &amountToWithdraw);
@@ -45,7 +46,8 @@ void showMenu(Session *session, BankAccountsTable *accounts, Queue *transaction_
             }
 
             break;
-        case 2:
+         }
+        case 2:{
             double amountToDeposit = 0;
 
             printf("\nHow much do you want to deposit: ");
@@ -57,7 +59,8 @@ void showMenu(Session *session, BankAccountsTable *accounts, Queue *transaction_
             }
 
             break;
-        case 3:
+          }
+        case 3:{
             double amountToTransfer = 0;
             char toIban[IBAN_MAX_LEN];
 
@@ -67,13 +70,17 @@ void showMenu(Session *session, BankAccountsTable *accounts, Queue *transaction_
             while (getchar() != '\n');
             break;
             }
+            while (getchar() != '\n');  
+
+        
             printf("Enter the IBAN of the receiver: ");
             scanf("%s", toIban);
-            if (transaction(loggedUserAccount, transaction_queue, accounts, loggedUserAccount->iban, toIban, amountToTransfer))
+            if (transaction(loggedUserAccount, transaction_queue, accounts, loggedUserAccount->iban, toIban, amountToTransfer) != -1)
             {
                 printf("Transfer added to your list. Enter 'Process all transacions' to proceed.");
             }
             break;
+        }
         case 4:
             executeAllTransactions(transaction_queue, accounts);
             break;
@@ -83,7 +90,7 @@ void showMenu(Session *session, BankAccountsTable *accounts, Queue *transaction_
             return;
 
         default:
-            printf("\nYou have selected wrong choise please try again.");
+            printf("\nYou have selected wrong choice please try again.");
             break;
         }
     }
@@ -91,6 +98,7 @@ void showMenu(Session *session, BankAccountsTable *accounts, Queue *transaction_
 
 int main()
 {
+    srand(time(NULL));
     Session *session = NULL;
     UsersTable *users = initUsers();
     Queue *transaction_queue = initQueue();

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "transactions.h"
+#include "database.h"
 
 Transaction *createTransaction(const char *fromIban, const char *toIban, double amount){
   Transaction *newTransaction = (Transaction*)malloc(sizeof(Transaction));
@@ -29,7 +30,7 @@ int transaction(BankAccount *account,Queue *queue,BankAccountsTable *map,const c
  BankAccount *to = findAccountByIban(map,(char *)toIban);
  //I don't check the from Iban because the user has already logged in so it must exist.
  if(!to){
-   printf("\nError: Receiver or sender account not found.");
+   printf("\nError: Receiver account not found.");
    return -1;
  }
  Transaction *current_transaction = createTransaction(fromIban,toIban,ammount);
@@ -69,7 +70,7 @@ int executeAllTransactions(Queue *queue,BankAccountsTable *map){
     }
     from->balance = from->balance - t->amount;
     to->balance = to->balance + t->amount;
-
+    saveTransactionsInFile(t);
     printf("Transfer executed %.2lf sent from %s to %s",t->amount,t->accountFrom,t->accountTo);
     free(t);
     executed++;

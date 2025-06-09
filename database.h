@@ -17,7 +17,7 @@ void readAllUsersFromFile(UsersTable *users);
 void saveAccountInFile(BankAccount *account);
 void updateAccountInFile(BankAccount *account);
 void readAllAccountFromFile(BankAccountsTable *accounts);
-void saveTransactionInFile(Transaction *transactions);
+void saveTransactionsInFile(Transaction *transactions);
 void readAllTransactionsFromFile(Queue *queue);
 
 //Plase for transactions
