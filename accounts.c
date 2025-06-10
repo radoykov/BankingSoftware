@@ -82,12 +82,12 @@ int withdraw(BankAccount *account, double amount)
 {
     if (account->balance == 0 || (account->balance - amount) < 0)
     {
-        printf("Error: Withdrawal unsuccessful due to insufficient funds in account.");
+        printf("\nError: Withdrawal unsuccessful due to insufficient funds in account!\n");
         return 0;
     }
     else if (amount <= 0)
     {
-        printf("Error: Withdrawal unsuccessful due to withdrawal amount being invalid.");
+        printf("\nError: Withdrawal unsuccessful due to withdrawal amount being invalid!\n");
         return 0;
     }
 
@@ -100,7 +100,7 @@ int deposit(BankAccount *account, double amount)
 {
     if (amount <= 0)
     {
-        printf("Error: Deposit unsuccessful due to deposit amount being invalid");
+        printf("\nError: Deposit unsuccessful due to deposit amount being invalid!\n");
         return 0;
     }
 

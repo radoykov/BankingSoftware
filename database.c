@@ -12,7 +12,7 @@ void saveUserInFile(User *user)
     size_t usersSaved = fwrite(user, sizeof(User), 1, file);
     if (usersSaved != 1)
     {
-        printf("Error: Cannot save user in file!");
+        printf("\nError: Cannot save user in file!\n");
     }
 
     fclose(file);
@@ -41,7 +41,7 @@ void readAllUsersFromFile(UsersTable *users)
 
     if (!feof(file))
     {
-        printf("Error reading from file");
+        printf("\nError reading from file!\n");
         exit(1);
     }
 
@@ -58,7 +58,7 @@ void saveAccountInFile(BankAccount *account)
     size_t accountsSaved = fwrite(account, sizeof(BankAccount), 1, file);
     if (accountsSaved != 1)
     {
-        printf("Error: Cannot save account in file!");
+        printf("\nError: Cannot save account in file!\n");
     }
 
     fclose(file);
@@ -128,19 +128,20 @@ void readAllAccountFromFile(BankAccountsTable *accounts)
 
     if (!feof(file))
     {
-        printf("Error reading from file");
+        printf("\nError reading from file!\n");
         exit(1);
     }
 
     fclose(file);
 }
+// for transactions
 
-void saveTransactionsInFile(Transaction *transaction){
+void saveTransactionInFile(Transaction *transaction){
     FILE *file = fopen("data/transactions.bin","ab");
     CHECK_FILE(file);
     size_t transactionsSaved = fwrite(transaction,sizeof(Transaction),1,file);
     if(transactionsSaved != 1){
-        printf("Error: Cannot save transactions in file.");
+        printf("\nError: Cannot save transactions in file!\n");
     }
 
     fclose(file);
@@ -151,16 +152,11 @@ void readAllTransactionsFromFile(Queue *queue){
     if(!file){
         return;
     }
-
     
     while (1)
     {
         Transaction *t = (Transaction *)malloc(sizeof(Transaction));
-        if (!t)
-        {
-            printf("Memory allocation failed.\n");
-            exit(1);
-        }
+        CHECK(t);
 
         if (fread(t, sizeof(Transaction), 1, file) != 1)
         {
@@ -173,7 +169,7 @@ void readAllTransactionsFromFile(Queue *queue){
 
     if (!feof(file))
     {
-        printf("Error reading from transaction file.\n");
+        printf("\nError reading from transaction file!\n");
         exit(1);
     }
 

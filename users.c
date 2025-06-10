@@ -89,7 +89,7 @@ User *loginUser(UsersTable *users)
     User *user = findUserByUsername(users, username);
     if (!user)
     {
-        printf("Error: No such user exists.");
+        printf("\nError: No such user exists!\n");
         return NULL;
     }
 
@@ -102,12 +102,12 @@ User *loginUser(UsersTable *users)
 
     if (strcmp(user->hashedPassword, hashedPass) == 0)
     {
-        printf("Login Successful.");
+        printf("Login Successful.\n");
         return user;
     }
     else
     {
-        printf("Error: Incorrect password.");
+        printf("\nError: Incorrect password!\n");
         return NULL;
     }
 }
@@ -125,7 +125,7 @@ User *registerUser(UsersTable *users)
     User *user = findUserByUsername(users, username);
     if (user)
     {
-        printf("Error: Provided username already exists!\n");
+        printf("\nError: Provided username already exists!\n");
         return NULL;
     }
 
@@ -144,7 +144,7 @@ int validateUsername(char *username)
 {
     if (strlen(username) > USERNAME_MAX_LEN || strlen(username) < USERNAME_MIN_LEN)
     {
-        printf("Error: Username length must be between %d and %d \n", USERNAME_MIN_LEN, USERNAME_MAX_LEN);
+        printf("\nError: Username length must be between %d and %d!\n", USERNAME_MIN_LEN, USERNAME_MAX_LEN);
         return 0;
     }
     return 1;
@@ -154,7 +154,7 @@ int validatePassword(char *password)
 {
     if (strlen(password) > PASSWORD_MAX_LEN || strlen(password) < PASSWORD_MIN_LEN)
     {
-        printf("Error: Password length must be between %d and %d \n", PASSWORD_MIN_LEN, PASSWORD_MAX_LEN);
+        printf("\nError: Password length must be between %d and %d!\n", PASSWORD_MIN_LEN, PASSWORD_MAX_LEN);
         return 0;
     }
     return 1;

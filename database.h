@@ -7,19 +7,20 @@
 #define CHECK_FILE(p)                           \
     if (!p)                                     \
     {                                           \
-        printf("Error file cannot be opened."); \
+        printf("\nError file cannot be opened!\n"); \
         exit(1);                                \
     }
-
+//users
 void saveUserInFile(User *user);
 void readAllUsersFromFile(UsersTable *users);
 
+//accounts
 void saveAccountInFile(BankAccount *account);
 void updateAccountInFile(BankAccount *account);
 void readAllAccountFromFile(BankAccountsTable *accounts);
-void saveTransactionsInFile(Transaction *transactions);
-void readAllTransactionsFromFile(Queue *queue);
 
-//Plase for transactions
+//transactions
+void saveTransactionInFile(Transaction *transactions);
+void readAllTransactionsFromFile(Queue *queue);
 
 #endif

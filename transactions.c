@@ -23,19 +23,19 @@ Transaction *createTransaction(const char *fromIban, const char *toIban, double 
 
 int transaction(BankAccount *account,Queue *queue,BankAccountsTable *map,const char *fromIban,const char *toIban,double ammount){
  if(!fromIban || !toIban){
-    printf("\nError: Invalid Iban.");
+    printf("\nError: Invalid Iban!\n");
     return -1;
  }
  BankAccount *from = findAccountByIban(map,(char *)fromIban);
  BankAccount *to = findAccountByIban(map,(char *)toIban);
  //I don't check the from Iban because the user has already logged in so it must exist.
  if(!to){
-   printf("\nError: Receiver account not found.");
+   printf("\nError: Receiver account not found!\n");
    return -1;
  }
  Transaction *current_transaction = createTransaction(fromIban,toIban,ammount);
  if(!current_transaction){
-    printf("\nError:Failed to create transaction");
+    printf("\nError:Failed to create transaction!\n");
     return -1;
  }  
 
@@ -45,7 +45,7 @@ int transaction(BankAccount *account,Queue *queue,BankAccountsTable *map,const c
 
 int executeAllTransactions(Queue *queue,BankAccountsTable *map){
   if(!queue || !map){
-    printf("Error: No queue or Accounts list.");
+    printf("\nError: No queue or Accounts list!\n");
     return 0;
   }
 
@@ -70,7 +70,7 @@ int executeAllTransactions(Queue *queue,BankAccountsTable *map){
     }
     from->balance = from->balance - t->amount;
     to->balance = to->balance + t->amount;
-    saveTransactionsInFile(t);
+    //saveTransactionInFile(t);
     printf("Transfer executed %.2lf sent from %s to %s",t->amount,t->accountFrom,t->accountTo);
     free(t);
     executed++;
