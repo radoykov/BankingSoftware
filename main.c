@@ -67,7 +67,6 @@ void showMenu(Session *session, BankAccountsTable *accounts, Queue *transaction_
             printf("\nHow much do you wish to transfer: ");
             if (scanf("%lf", &amountToTransfer) != 1 || amountToTransfer <= 0) {
             printf("Invalid amount.\n");
-            while (getchar() != '\n');
             break;
             }
             while (getchar() != '\n');  

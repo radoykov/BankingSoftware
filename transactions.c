@@ -70,7 +70,7 @@ int executeAllTransactions(Queue *queue,BankAccountsTable *map){
     }
     from->balance = from->balance - t->amount;
     to->balance = to->balance + t->amount;
-    //saveTransactionInFile(t);
+    saveTransactionInFile(t);
     printf("Transfer executed %.2lf sent from %s to %s",t->amount,t->accountFrom,t->accountTo);
     free(t);
     executed++;
