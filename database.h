@@ -22,5 +22,6 @@ void readAllAccountFromFile(BankAccountsTable *accounts);
 //transactions
 void saveTransactionInFile(Transaction *transactions);
 void readAllTransactionsFromFile(Queue *queue);
+void emptyTransactionFile();
 
 #endif

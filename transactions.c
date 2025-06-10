@@ -21,26 +21,26 @@ Transaction *createTransaction(const char *fromIban, const char *toIban, double 
 
 
 
-int transaction(BankAccount *account,Queue *queue,BankAccountsTable *map,const char *fromIban,const char *toIban,double ammount){
+Transaction * transaction(BankAccount *account,Queue *queue,BankAccountsTable *map,const char *fromIban,const char *toIban,double ammount){
  if(!fromIban || !toIban){
     printf("\nError: Invalid Iban!\n");
-    return -1;
+    return NULL;
  }
  BankAccount *from = findAccountByIban(map,(char *)fromIban);
  BankAccount *to = findAccountByIban(map,(char *)toIban);
  //I don't check the from Iban because the user has already logged in so it must exist.
  if(!to){
    printf("\nError: Receiver account not found!\n");
-   return -1;
+   return NULL;
  }
  Transaction *current_transaction = createTransaction(fromIban,toIban,ammount);
  if(!current_transaction){
     printf("\nError:Failed to create transaction!\n");
-    return -1;
+    return NULL;
  }  
 
  enqueue(queue,current_transaction);
- return 1;
+ return current_transaction;
 }
 
 int executeAllTransactions(Queue *queue,BankAccountsTable *map){
@@ -59,22 +59,26 @@ int executeAllTransactions(Queue *queue,BankAccountsTable *map){
     BankAccount *to = findAccountByIban(map,t->accountTo);
 
     if(!from || !to){
-      printf("Skipping transfer: Invalid accounts.");
+      printf("Skipping transfer: Invalid accounts.\n");
       free(t);
       continue;
     }
     if(from->balance < t->amount){
-      printf("Skipping transfer from %s to %s: Insufficient funds",t->accountFrom,t->accountTo);
+      printf("Skipping transfer from %s to %s: Insufficient funds\n",t->accountFrom,t->accountTo);
       free(t);
       continue;
     }
     from->balance = from->balance - t->amount;
     to->balance = to->balance + t->amount;
-    //saveTransactionInFile(t);
-    printf("Transfer executed %.2lf sent from %s to %s",t->amount,t->accountFrom,t->accountTo);
+    updateAccountInFile(from);
+    updateAccountInFile(to);
+    printf("Transfer executed %.2lf sent from %s to %s\n",t->amount,t->accountFrom,t->accountTo);
     free(t);
     executed++;
   }
-  printf("Number of successfully executed transfers: %d",executed);
+  printf("Number of successfully executed transfers: %d\n",executed);
+  if(executed != 0){
+    emptyTransactionFile();
+  }
   return executed;
   }

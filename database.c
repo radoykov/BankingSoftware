@@ -70,7 +70,7 @@ void updateAccountInFile(BankAccount *account)
     CHECK_FILE(file);
 
     // implementing binary search for searching the Account in file.O(logn)
-    fseek(file, 0, SEEK_END); 
+    fseek(file, 0, SEEK_END);
     uint size = ftell(file) / sizeof(BankAccount);
     uint left = 0;
     uint right = size - 1;
@@ -136,23 +136,27 @@ void readAllAccountFromFile(BankAccountsTable *accounts)
 }
 // for transactions
 
-void saveTransactionInFile(Transaction *transaction){
-    FILE *file = fopen("data/transactions.bin","ab");
+void saveTransactionInFile(Transaction *transaction)
+{
+    FILE *file = fopen("data/transactions.bin", "ab");
     CHECK_FILE(file);
-    size_t transactionsSaved = fwrite(transaction,sizeof(Transaction),1,file);
-    if(transactionsSaved != 1){
+    size_t transactionsSaved = fwrite(transaction, sizeof(Transaction), 1, file);
+    if (transactionsSaved != 1)
+    {
         printf("\nError: Cannot save transactions in file!\n");
     }
 
     fclose(file);
 }
 
-void readAllTransactionsFromFile(Queue *queue){
+void readAllTransactionsFromFile(Queue *queue)
+{
     FILE *file = fopen("data/transactions.bin", "rb");
-    if(!file){
+    if (!file)
+    {
         return;
     }
-    
+
     while (1)
     {
         Transaction *t = (Transaction *)malloc(sizeof(Transaction));
@@ -176,3 +180,10 @@ void readAllTransactionsFromFile(Queue *queue){
     fclose(file);
 }
 
+void emptyTransactionFile()
+{
+    if (remove("data/transactions.bin") != 0)
+    {
+        printf("Error deleting file");
+    }
+}

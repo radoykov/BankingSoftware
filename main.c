@@ -11,7 +11,7 @@
 
 void showMenu(Session *session, BankAccountsTable *accounts, Queue *transaction_queue)
 {
-    printf("\nWelcome %s", session->username);
+    printf("\n\nWelcome %s\n", session->username);
 
     while (1)
     {
@@ -20,7 +20,8 @@ void showMenu(Session *session, BankAccountsTable *accounts, Queue *transaction_
         printf("\n2.Deposit");
         printf("\n3.Transaction");
         printf("\n4.Process all transacions");
-        printf("\n5.Logout");
+        printf("\n5.Show current balance");
+        printf("\n6.Logout");
         int choise = 0;
         printf("\nYour choise is: ");
         scanf("%d", &choise);
@@ -35,19 +36,21 @@ void showMenu(Session *session, BankAccountsTable *accounts, Queue *transaction_
 
         switch (choise) // add to show how much you have in the acccount !
         {
-        case 1:{
+        case 1:
+        {
             double amountToWithdraw = 0;
             printf("\nHow much do you want to withdraw: ");
             scanf("%lf", &amountToWithdraw);
             if (withdraw(loggedUserAccount, amountToWithdraw))
             {
                 updateAccountInFile(loggedUserAccount);
-                printf("\nSuccessfully withdrawn %.2f! Current balance: %.2f", amountToWithdraw, loggedUserAccount->balance);
+                printf("\nSuccessfully withdrawn %.2f! Current balance: %.2f\n", amountToWithdraw, loggedUserAccount->balance);
             }
 
             break;
-         }
-        case 2:{
+        }
+        case 2:
+        {
             double amountToDeposit = 0;
 
             printf("\nHow much do you want to deposit: ");
@@ -55,29 +58,32 @@ void showMenu(Session *session, BankAccountsTable *accounts, Queue *transaction_
             if (deposit(loggedUserAccount, amountToDeposit))
             {
                 updateAccountInFile(loggedUserAccount);
-                printf("\nSuccessfully deposited %.2f! Current balance: %.2f", amountToDeposit, loggedUserAccount->balance);
+                printf("\nSuccessfully deposited %.2f! Current balance: %.2f\n", amountToDeposit, loggedUserAccount->balance);
             }
 
             break;
-          }
-        case 3:{
+        }
+        case 3:
+        {
             double amountToTransfer = 0;
             char toIban[IBAN_MAX_LEN];
 
             printf("\nHow much do you wish to transfer: ");
-            if (scanf("%lf", &amountToTransfer) != 1 || amountToTransfer <= 0) {
-            printf("Invalid amount.\n");
-            while (getchar() != '\n');
-            break;
+            if (scanf("%lf", &amountToTransfer) != 1 || amountToTransfer <= 0)
+            {
+                printf("Invalid amount.\n");
+                while (getchar() != '\n')
+                    ;
+                break;
             }
-            while (getchar() != '\n');  
 
-        
             printf("Enter the IBAN of the receiver: ");
             scanf("%s", toIban);
-            if (transaction(loggedUserAccount, transaction_queue, accounts, loggedUserAccount->iban, toIban, amountToTransfer) != -1)
+            Transaction * trans = transaction(loggedUserAccount, transaction_queue, accounts, loggedUserAccount->iban, toIban, amountToTransfer);
+            if (trans)
             {
-                printf("Transfer added to your list. Enter 'Process all transacions' to proceed.");
+                printf("\nTransfer added to your list. Enter 'Process all transacions' to proceed.\n");
+                saveTransactionInFile(trans);
             }
             break;
         }
@@ -85,6 +91,9 @@ void showMenu(Session *session, BankAccountsTable *accounts, Queue *transaction_
             executeAllTransactions(transaction_queue, accounts);
             break;
         case 5:
+            printf("Current balance: %.2f\n", loggedUserAccount->balance);
+            break;
+        case 6:
             printf("You succeesfully logged out.");
             deleleSession(session);
             return;
@@ -100,12 +109,15 @@ int main()
 {
     srand(time(NULL));
     Session *session = NULL;
+    
     UsersTable *users = initUsers();
-    Queue *transaction_queue = initQueue();
     readAllUsersFromFile(users);
+    
     BankAccountsTable *accounts = initBankAccounts();
     readAllAccountFromFile(accounts);
-    // transactions
+    
+    Queue *transaction_queue = initQueue();
+    readAllTransactionsFromFile(transaction_queue);
 
     while (1)
     {
@@ -144,6 +156,7 @@ int main()
         {
             releaseUsers(users);
             releaseBankAccounts(accounts);
+            releaseQueue(transaction_queue);
             printf("\nThe program have finished.");
             return 0;
         }

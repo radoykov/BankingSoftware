@@ -14,7 +14,7 @@ typedef struct Transaction
 
 
 Transaction *createTransaction(const char *fromIban, const char *toIban, double amount);
-int transaction(BankAccount* account,Queue* queue,BankAccountsTable *map,const char *fromIban,const char *toIban,double ammount);
+Transaction * transaction(BankAccount* account,Queue* queue,BankAccountsTable *map,const char *fromIban,const char *toIban,double ammount);
 int executeAllTransactions(Queue *queue,BankAccountsTable *map);
 
 #endif
